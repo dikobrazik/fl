@@ -204,11 +204,11 @@
 
             const star = options =>{
                 var starPath = new Path2D();
-                if(options.size == 'small') r=4,R=10;
-                else if(options.size == 'medium') r=10,R=20;
-                else if(options.size == 'big') r=15,R=30;
+                if(options.size == 'small') r=4,R=8;
+                else if(options.size == 'medium') r=5,R=10;
+                else if(options.size == 'big') r=6,R=12;
                 var ctx = getContext();
-                if(options.color !== undefined) ctx.strokeStyle = options.color;
+                if(options.color !== undefined) ctx.fillStyle = options.color;
                 if(options.n != 0){
                     for(var i = 0,a = 0; i<2*options.n+1;i++,a += Math.PI / options.n){
                         var l = i % 2 == 0 ? r : R;
@@ -221,12 +221,12 @@
                 }else{
                     starPath.arc(options.x,options.y,r,0 * Math.PI, 2 * Math.PI)
                 }
-                ctx.stroke(starPath);
+                ctx.fill(starPath);
                 shapes.push({
                     path:starPath,
                     hint:options.hint,
                 });
-                ctx.strokeStyle = 'black';
+                ctx.fillStyle = 'black';
             };
             
             
@@ -243,27 +243,32 @@
                 };
                 ctx.stroke();
                 
-                for(var i = 0, num = 2; i<data.circles.length; i++, num+=2){
+                for(var i = 0; i<data.circles.length; i++){
                     var circle = data.circles[i];
                     ctx.beginPath();
                     ctx.arc(200,200,circle.radius,0 * Math.PI, 2 * Math.PI)
                     ctx.stroke();
-                    if(i==0) var delta = circle.radius/2;
-                    else var delta = (circle.radius-data.circles[i-1].radius)/2;
+                    if(i==0) var delta = circle.radius/4;
+                    else var delta = (circle.radius-data.circles[i-1].radius)/2.3;
+                    
                     for(var p = 0; p < data.parts; p++){
                         var part = circle.qr[p];
-                        if(part === undefined) continue; 
-                        for(var k=0;k<part.length;k++){
-                            x=200+(circle.radius-delta)*Math.sin((partDegree/(num)*(k+0.5)+partDegree*p) * Math.PI / 180);
-                            y=200+(circle.radius-delta)*Math.cos((partDegree/(num)*(k+0.5)+partDegree*p) * Math.PI / 180);
+                        if(part === undefined) continue;
+                        var num = (circle.radius-delta)*Math.PI*partDegree/180;
+                        for(var k=0;k<part.length && num > 0;k++, num -= 8){
+                            x=200+(circle.radius-delta)*Math.sin((partDegree/(part.length-1)*(k+0.5)+partDegree*p) * Math.PI / 180);
+                            y=200+(circle.radius-delta)*Math.cos((partDegree/(part.length-1)*(k+0.5)+partDegree*p) * Math.PI / 180);
                             star({
                                 n:part[k].n,
-                                size:'small',
+                                size:'medium',
                                 x:x,
                                 y:y,
                                 color:part[k].color,
                                 hint:'Это фигура',
                             })
+                            /*if(part[k].size == 'small') num+=8;
+                            else if(part[k].size == 'medium') num+=10;
+                            else if(part[k].size == 'big') num+=12;*/
                         }
                     }
                 }
