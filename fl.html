@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            html, body{
+                width:100%;
+                display: flex;
+                flex-direction: row;
+            }
+            canvas{
+                background-color: whitesmoke;
+            }
+            #hint{
+                border: blueviolet solid 2px;
+                border-radius: 20px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <canvas id="myCanvas" width=400 height=400>
+
+            </canvas>
+            <div id='hint'> 
+                <p>
+                    Подсказка
+                </p>
+            </div>
+        </div>
+        <script>
+            var data = {
+                parts:7,
+                circles:[
+                    {
+                        radius:50,
+                        qr:[
+                            [
+                                {
+                                    n:7,
+                                    color:"green",
+                                },
+                                {
+                                    n:5,
+                                    color:"green",
+                                }
+                            ],
+                            [],
+                            [],
+                            [
+                                {
+                                    n:0,
+                                    color:"red",
+                                },
+                            ],
+                        ]
+                    },
+                    {
+                        radius:100,
+                        qr:[
+                            [
+                                {
+                                    n:10,
+                                    color:"green",
+                                },
+                                {
+                                    n:5,
+                                    color:"green",
+                                },
+                                {
+                                    n:6,
+                                    color:"green",
+                                },
+                                {
+                                    n:16,
+                                    color:"green",
+                                },
+                            ],
+                            [
+                                {
+                                    n:9,
+                                    color:"green",
+                                },
+                                {
+                                    n:4,
+                                    color:"green",
+                                },
+                                {
+                                    n:3,
+                                    color:"green",
+                                },
+                                {
+                                    n:"23",
+                                    color:"green",
+                                },
+                            ],
+                            [   {
+                                    n:"5",
+                                    color:"green",
+                                },
+                                {
+                                    n:6,
+                                    color:"green",
+                                },
+                                {
+                                    n:7,
+                                    color:"green",
+                                },
+                                {
+                                    n:8,
+                                    color:"green",
+                                },
+                            ],
+                            [
+                                {
+                                    n:33,
+                                    color:"green",
+                                },
+                                {
+                                    n:4,
+                                    color:"green",
+                                },
+                                {
+                                    n:5,
+                                    color:"green",
+                                },
+                                {
+                                    n:3,
+                                    color:"green",
+                                },
+                            ],
+                        ]
+                    },
+                    {
+                        radius:150,
+                        qr:[
+                            [
+                                {
+                                    n:6,
+                                    color:"green",
+                                },
+                                {
+                                    n:5,
+                                    color:"green",
+                                }
+                            ],
+                            [],
+                            [],
+                            [
+                                {
+                                    n:4,
+                                    color:"red",
+                                },
+                                {
+                                    n:8,
+                                    color:"green",
+                                },
+                                {
+                                    n:8,
+                                    color:"purple",
+                                },
+                                {
+                                    n:5,
+                                    color:"green",
+                                },
+                                {
+                                    n:9,
+                                    color:"green",
+                                },
+                                {
+                                    n:6,
+                                    color:"red",
+                                },
+                            ],
+                            [
+
+                            ],
+                            [
+                                {
+                                    n:6,
+                                    color:"yellow",
+                                },
+                            ],
+                            [
+                                {
+                                    n:6,
+                                    color:"red",
+                                },
+                            ]
+                        ]
+                    }
+                ],
+            };
+            
+            const getContext = () => document.getElementById('myCanvas').getContext('2d');
+            
+            var shapes = [];
+            var w=400, h =400;
+            var leftOffset = document.getElementById('myCanvas').offsetLeft;
+            var topOffset = document.getElementById('myCanvas').offsetTop;
+            var ctx = getContext();
+
+            const star = options =>{
+                var starPath = new Path2D();
+                if(options.size == 'small') r=4,R=10;
+                else if(options.size == 'medium') r=10,R=20;
+                else if(options.size == 'big') r=15,R=30;
+                var ctx = getContext();
+                if(options.color !== undefined) ctx.strokeStyle = options.color;
+                if(options.n != 0){
+                    for(var i = 0,a = 0; i<2*options.n+1;i++,a += Math.PI / options.n){
+                        var l = i % 2 == 0 ? r : R;
+                        if(i==0){
+                            starPath.moveTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
+                            continue;
+                        }
+                        starPath.lineTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
+                    };
+                }else{
+                    starPath.arc(options.x,options.y,r,0 * Math.PI, 2 * Math.PI)
+                }
+                ctx.stroke(starPath);
+                shapes.push({
+                    path:starPath,
+                    hint:options.hint,
+                });
+                ctx.strokeStyle = 'black';
+            };
+            
+            
+            init();
+            function init(){
+                ctx.beginPath();
+                var partDegree = 360/data.parts;
+                for(var i = 0; i < data.parts; i++){
+                    ctx.moveTo(200,200);
+                    ctx.lineTo(
+                        200+2*Math.PI*150*Math.sin((partDegree*i) * Math.PI / 180),
+                        200+2*Math.PI*150*Math.cos((partDegree*i) * Math.PI / 180)
+                    );
+                };
+                ctx.stroke();
+                
+                for(var i = 0, num = 2; i<data.circles.length; i++, num+=2){
+                    var circle = data.circles[i];
+                    ctx.beginPath();
+                    ctx.arc(200,200,circle.radius,0 * Math.PI, 2 * Math.PI)
+                    ctx.stroke();
+                    if(i==0) var delta = circle.radius/2;
+                    else var delta = (circle.radius-data.circles[i-1].radius)/2;
+                    for(var p = 0; p < data.parts; p++){
+                        var part = circle.qr[p];
+                        if(part === undefined) continue; 
+                        for(var k=0;k<part.length;k++){
+                            x=200+(circle.radius-delta)*Math.sin((partDegree/(num)*(k+0.5)+partDegree*p) * Math.PI / 180);
+                            y=200+(circle.radius-delta)*Math.cos((partDegree/(num)*(k+0.5)+partDegree*p) * Math.PI / 180);
+                            star({
+                                n:part[k].n,
+                                size:'small',
+                                x:x,
+                                y:y,
+                                color:part[k].color,
+                                hint:'Это фигура',
+                            })
+                        }
+                    }
+                }
+            }
+            document.getElementById('myCanvas').addEventListener('mousemove',(e)=> {
+                var yep = false;
+                var x = e.clientX - leftOffset,
+                    y = e.clientY - topOffset;
+                ctx = getContext();
+                for(var i = 0; i < shapes.length; i++){
+                    yep = ctx.isPointInPath(shapes[i].path, x, y);
+                    if(yep) break;
+                }
+                if (yep) {
+                    document.getElementsByTagName('p')[0].innerText = shapes[i].hint;
+                }else{
+                    document.getElementsByTagName('p')[0].innerText = "Подсказка";
+                }
+            });
+        </script>
+    </body>
+</html>
