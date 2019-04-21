@@ -21,7 +21,7 @@
     </head>
     <body>
         <div>
-            <canvas id="myCanvas" width=400 height=400>
+            <canvas id="myCanvas" width=800 height=800>
 
             </canvas>
             <div id='hint'> 
@@ -44,8 +44,36 @@
                                 },
                                 {
                                     n:5,
-                                    color:"green",
-                                }
+                                    color:"black",
+                                },
+                                {
+                                    n:7,
+                                    color:"blue",
+                                },
+                                {
+                                    n:5,
+                                    color:"red",
+                                },
+                                {
+                                    n:9,
+                                    color:"purple",
+                                },
+                                {
+                                    n:5,
+                                    color:"black",
+                                },
+                                {
+                                    n:7,
+                                    color:"blue",
+                                },
+                                {
+                                    n:5,
+                                    color:"red",
+                                },
+                                {
+                                    n:9,
+                                    color:"purple",
+                                },
                             ],
                             [],
                             [],
@@ -67,15 +95,27 @@
                                 },
                                 {
                                     n:5,
-                                    color:"green",
+                                    color:"purple",
                                 },
                                 {
                                     n:6,
-                                    color:"green",
+                                    color:"orange",
                                 },
                                 {
                                     n:16,
-                                    color:"green",
+                                    color:"red",
+                                },
+                                {
+                                    n:4,
+                                    color:"orange",
+                                },
+                                {
+                                    n:16,
+                                    color:"red",
+                                },
+                                {
+                                    n:4,
+                                    color:"orange",
                                 },
                             ],
                             [
@@ -197,7 +237,7 @@
             const getContext = () => document.getElementById('myCanvas').getContext('2d');
             
             var shapes = [];
-            var w=400, h =400;
+            var w=800, h =800;
             var leftOffset = document.getElementById('myCanvas').offsetLeft;
             var topOffset = document.getElementById('myCanvas').offsetTop;
             var ctx = getContext();
@@ -221,6 +261,7 @@
                 }else{
                     starPath.arc(options.x,options.y,r,0 * Math.PI, 2 * Math.PI)
                 }
+                //starPath.arc(options.x,options.y,R,0 * Math.PI, 2 * Math.PI)
                 ctx.fill(starPath);
                 shapes.push({
                     path:starPath,
@@ -232,35 +273,67 @@
             
             init();
             function init(){
+                ctx.clearRect(0,0,w,h)
+                shapes = [];
                 ctx.beginPath();
                 var partDegree = 360/data.parts;
+                //console.log(partDegree)
                 for(var i = 0; i < data.parts; i++){
-                    ctx.moveTo(200,200);
+                    ctx.moveTo(w/2,h/2);
                     ctx.lineTo(
-                        200+2*Math.PI*150*Math.sin((partDegree*i) * Math.PI / 180),
-                        200+2*Math.PI*150*Math.cos((partDegree*i) * Math.PI / 180)
+                        w/2+(data.circles[2].radius+20)*Math.sin((partDegree*i) * Math.PI / 180),
+                        h/2+(data.circles[2].radius+20)*Math.cos((partDegree*i) * Math.PI / 180)
                     );
                 };
                 ctx.stroke();
-                
                 for(var i = 0; i<data.circles.length; i++){
                     var circle = data.circles[i];
                     ctx.beginPath();
-                    ctx.arc(200,200,circle.radius,0 * Math.PI, 2 * Math.PI)
+                    ctx.arc(w/2,h/2,circle.radius,0 * Math.PI, 2 * Math.PI)
                     ctx.stroke();
-                    if(i==0) var delta = circle.radius/4;
-                    else var delta = (circle.radius-data.circles[i-1].radius)/2.3;
+                    if(i==0) var delta = circle.radius;
+                    else var delta = (circle.radius-data.circles[i-1].radius);
                     
                     for(var p = 0; p < data.parts; p++){
                         var part = circle.qr[p];
                         if(part === undefined) continue;
-                        var num = (circle.radius-delta)*Math.PI*partDegree/180;
-                        for(var k=0;k<part.length && num > 0;k++, num -= 8){
-                            x=200+(circle.radius-delta)*Math.sin((partDegree/(part.length-1)*(k+0.5)+partDegree*p) * Math.PI / 180);
-                            y=200+(circle.radius-delta)*Math.cos((partDegree/(part.length-1)*(k+0.5)+partDegree*p) * Math.PI / 180);
+                        var ply = 1;
+                        if(delta < 18){
+                            data.circles[i].radius+=18;
+                            //alert('Не помещается, увеличиваю ' +i+'-й круг...')
+                            return init();
+                        }
+                        for(var k=0, num = ((24*180)/(Math.PI*(circle.radius-12*ply)))/2;k<part.length;k++, num += ((24*180)/(Math.PI*(circle.radius-12*ply)))){
+                            
+                            if(i==0 && num+4>partDegree){
+                                num=((24*180)/(Math.PI*(circle.radius-16*ply)));
+                                if(ply>=2) ply+=1.2;
+                                else ply+=1;
+                                if(24*ply > delta){
+                                    data.circles[i].radius+=18;
+                                    //alert('Не помещается, увеличиваю ' +i+'-й круг...')
+                                    return init();
+                                }
+                            }
+                            if(num+4>partDegree){
+                                num=((24*180)/(Math.PI*(circle.radius-16*ply)))/1.8;
+                                ply+=1;
+                                if(18*ply > delta){
+                                    data.circles[i].radius+=18;
+                                    //alert('Не помещается, увеличиваю ' +i+'-й круг...')
+                                    return init();
+                                }
+                            }
+                            if(ply>1){
+                                x=w/2+(circle.radius-18*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
+                                y=h/2+(circle.radius-18*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
+                            }else{
+                                x=w/2+(circle.radius-12)*Math.sin((num+partDegree*p) * Math.PI / 180);
+                                y=h/2+(circle.radius-12)*Math.cos((num+partDegree*p) * Math.PI / 180);
+                            }
                             star({
                                 n:part[k].n,
-                                size:'medium',
+                                size:'big',
                                 x:x,
                                 y:y,
                                 color:part[k].color,
