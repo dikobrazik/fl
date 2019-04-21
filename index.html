@@ -110,6 +110,27 @@
                                     color:"orange",
                                 },
                                 {
+                                    n:10,
+                                    color:"green",
+                                },
+                                {
+                                    n:5,
+                                    color:"purple",
+                                },
+                                {
+                                    n:6,
+                                    color:"orange",
+                                },
+                                {
+                                    n:16,
+                                    color:"red",
+                                },
+                                {
+                                    n:4,
+                                    color:"orange",
+                                },
+                                
+                                {
                                     n:16,
                                     color:"red",
                                 },
@@ -277,7 +298,6 @@
                 shapes = [];
                 ctx.beginPath();
                 var partDegree = 360/data.parts;
-                //console.log(partDegree)
                 for(var i = 0; i < data.parts; i++){
                     ctx.moveTo(w/2,h/2);
                     ctx.lineTo(
@@ -288,6 +308,7 @@
                 ctx.stroke();
                 for(var i = 0; i<data.circles.length; i++){
                     var circle = data.circles[i];
+                    var radius = i==0?0:data.circles[i-1].radius;
                     ctx.beginPath();
                     ctx.arc(w/2,h/2,circle.radius,0 * Math.PI, 2 * Math.PI)
                     ctx.stroke();
@@ -303,20 +324,80 @@
                             //alert('Не помещается, увеличиваю ' +i+'-й круг...')
                             return init();
                         }
-                        for(var k=0, num = ((24*180)/(Math.PI*(circle.radius-12*ply)))/2;k<part.length;k++, num += ((24*180)/(Math.PI*(circle.radius-12*ply)))){
-                            
-                            if(i==0 && num+4>partDegree){
-                                num=((24*180)/(Math.PI*(circle.radius-16*ply)));
-                                if(ply>=2) ply+=1.2;
-                                else ply+=1;
-                                if(24*ply > delta){
-                                    data.circles[i].radius+=18;
+                        if(i==0){
+                            ply=2;
+                            for(var k=0, num = ((24*180)/(Math.PI*(radius+12*ply)))/2;k<part.length;k++, num += ((16*180)/(Math.PI*(radius+12*ply)))){
+                                if(num+5>partDegree){
+                                    num=((12*180)/(Math.PI*(radius+16*ply)))/2;
+                                    if(k==0 && i==0) {
+                                        num=partDegree/2;
+                                    }
+                                    ply+=1.4;
+                                }
+                                if(20*ply > delta){
+                                    data.circles[i].radius+=14;
                                     //alert('Не помещается, увеличиваю ' +i+'-й круг...')
                                     return init();
                                 }
+                                if(k==0){
+                                    x=w/2+(radius+16*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
+                                    y=h/2+(radius+16*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
+                                }else if(ply>1){
+                                    x=w/2+(radius+17*ply)*Math.sin((num+5+partDegree*p) * Math.PI / 180);
+                                    y=h/2+(radius+17*ply)*Math.cos((num+5+partDegree*p) * Math.PI / 180);
+                                }
+                                star({
+                                    n:part[k].n,
+                                    size:'big',
+                                    x:x,
+                                    y:y,
+                                    color:part[k].color,
+                                    hint:'Это фигура'+k,
+                                })
+                                /*if(part[k].size == 'small') num+=8;
+                                else if(part[k].size == 'medium') num+=10;
+                                else if(part[k].size == 'big') num+=12;*/
                             }
-                            if(num+4>partDegree){
-                                num=((24*180)/(Math.PI*(circle.radius-16*ply)))/1.8;
+                        }else{
+                            for(var k=0, num = ((24*180)/(Math.PI*(radius+12*ply)))/2;k<part.length;k++, num += ((24*180)/(Math.PI*(radius+12*ply)))){
+                                
+                                if(num+4>partDegree){
+                                    num=((24*180)/(Math.PI*(radius+16*ply)))/1.8;
+                                    ply+=1;
+                                }
+                                if(24*ply > delta){
+                                    data.circles[i].radius+=16;
+                                    //alert('Не помещается, увеличиваю ' +i+'-й круг...')
+                                    return init();
+                                }
+                                if(ply>1){
+                                    x=w/2+(radius+20*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
+                                    y=h/2+(radius+20*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
+                                }else{
+                                    x=w/2+(radius+14)*Math.sin((num+1+partDegree*p) * Math.PI / 180);
+                                    y=h/2+(radius+14)*Math.cos((num+1+partDegree*p) * Math.PI / 180);
+                                }
+                                
+                                star({
+                                    n:part[k].n,
+                                    size:'big',
+                                    x:x,
+                                    y:y,
+                                    color:part[k].color,
+                                    hint:'Это фигура'+k,
+                                })
+                                /*if(part[k].size == 'small') num+=8;
+                                else if(part[k].size == 'medium') num+=10;
+                                else if(part[k].size == 'big') num+=12;*/
+                            }
+                        }
+                        /*
+                        for(var k=0, num = ((24*180)/(Math.PI*(radius+12*ply)))/2;k<part.length;k++, num += ((24*180)/(Math.PI*(radius+12*ply)))){
+                            if(i==0 && num>partDegree){
+                                num=((12*180)/(Math.PI*(radius+16*ply)))/1.8;
+                                if(k==0 && i==0) {
+                                    num=partDegree/2;
+                                }
                                 ply+=1;
                                 if(18*ply > delta){
                                     data.circles[i].radius+=18;
@@ -324,25 +405,38 @@
                                     return init();
                                 }
                             }
-                            if(ply>1){
-                                x=w/2+(circle.radius-18*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
-                                y=h/2+(circle.radius-18*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
-                            }else{
-                                x=w/2+(circle.radius-12)*Math.sin((num+partDegree*p) * Math.PI / 180);
-                                y=h/2+(circle.radius-12)*Math.cos((num+partDegree*p) * Math.PI / 180);
+                            else if(num+4>partDegree){
+                                num=((24*180)/(Math.PI*(radius+16*ply)))/1.8;
+                                ply+=1;
+                                if(18*ply > delta){
+                                    data.circles[i].radius+=18;
+                                    //alert('Не помещается, увеличиваю ' +i+'-й круг...')
+                                    return init();
+                                }
                             }
+                            if(i==0 && k==0){
+                                x=w/2+(radius+16*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
+                                y=h/2+(radius+16*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
+                            }else if(ply>1){
+                                x=w/2+(radius+20*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
+                                y=h/2+(radius+20*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
+                            }else{
+                                x=w/2+(radius+12)*Math.sin((num+partDegree*p) * Math.PI / 180);
+                                y=h/2+(radius+12)*Math.cos((num+partDegree*p) * Math.PI / 180);
+                            }
+                            
                             star({
                                 n:part[k].n,
                                 size:'big',
                                 x:x,
                                 y:y,
                                 color:part[k].color,
-                                hint:'Это фигура',
+                                hint:'Это фигура'+k,
                             })
                             /*if(part[k].size == 'small') num+=8;
                             else if(part[k].size == 'medium') num+=10;
-                            else if(part[k].size == 'big') num+=12;*/
-                        }
+                            else if(part[k].size == 'big') num+=12;
+                        }*/
                     }
                 }
             }
