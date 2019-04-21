@@ -334,8 +334,8 @@
                                     }
                                     ply+=1.4;
                                 }
-                                if(20*ply > delta){
-                                    data.circles[i].radius+=14;
+                                if(18*ply > delta){
+                                    data.circles[i].radius+=16;
                                     //alert('Не помещается, увеличиваю ' +i+'-й круг...')
                                     return init();
                                 }
@@ -343,8 +343,8 @@
                                     x=w/2+(radius+16*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
                                     y=h/2+(radius+16*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
                                 }else if(ply>1){
-                                    x=w/2+(radius+17*ply)*Math.sin((num+5+partDegree*p) * Math.PI / 180);
-                                    y=h/2+(radius+17*ply)*Math.cos((num+5+partDegree*p) * Math.PI / 180);
+                                    x=w/2+(radius+16*ply)*Math.sin((num+5+partDegree*p) * Math.PI / 180);
+                                    y=h/2+(radius+16*ply)*Math.cos((num+5+partDegree*p) * Math.PI / 180);
                                 }
                                 star({
                                     n:part[k].n,
@@ -365,7 +365,7 @@
                                     num=((24*180)/(Math.PI*(radius+16*ply)))/1.8;
                                     ply+=1.4;
                                 }
-                                if(26*ply > delta){
+                                if(20*ply > delta){
                                     data.circles[i].radius+=12;
                                     //alert('Не помещается, увеличиваю ' +i+'-й круг...')
                                     return init();
