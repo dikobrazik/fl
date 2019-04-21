@@ -363,10 +363,10 @@
                                 
                                 if(num+4>partDegree){
                                     num=((24*180)/(Math.PI*(radius+16*ply)))/1.8;
-                                    ply+=1;
+                                    ply+=1.4;
                                 }
-                                if(24*ply > delta){
-                                    data.circles[i].radius+=16;
+                                if(26*ply > delta){
+                                    data.circles[i].radius+=12;
                                     //alert('Не помещается, увеличиваю ' +i+'-й круг...')
                                     return init();
                                 }
