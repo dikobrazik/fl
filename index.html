@@ -415,13 +415,7 @@
                     
                     var circle = data.circles[i];
                     if(i!=0 && editCircles) circles[i] += circles[i-1] 
-                    /*
-                    *       radius - радиус предыдущего круга
-                    */
                     var radius = i==0?0:circles[i-1];
-                    /*
-                    *       delta - расстояние между кругами
-                    */
                     if(editCircles) var delta = 0;
                     else var delta = (circles[i]-circles[i-1]);
 
@@ -517,7 +511,10 @@
                         tr.appendChild(document.createElement('td'));
                         //if(s[i].ss[j].hint === undefined) continue;
                         for (key in s[i].ss[j]){
-                            td = document.createElement('td');
+                            if(key == '0'){
+                               continue
+                            }
+                            td = document.createElement(s[i].ss[j][0]=='bold'?'th':'td');
                             td.style.verticalAlign = 'baseline';
                             td.innerHTML = s[i].ss[j][key];
                             tr.appendChild(td);
@@ -621,16 +618,17 @@
                             s[shape.circle].ss = [];
                         }
                         s[shape.circle].ss.push({
-                            0:shape.hint,
-                            1:shape.color,
-                            2:shape.size,
-                            3:shape.n,
-                            4:shape.mark?shape.mark:'-',
+                            0:i==0?'bold':'nope',
+                            n:shape.n,
+                            size:shape.size,
+                            color:shape.color,
+                            hint:shape.hint,
+                            mark:shape.mark?shape.mark:'-',
                         })
                     }
                     addTable(s);
                 }else if(index!=oldIndex){
-                    document.getElementsByTagName('p')[0].innerText = "";
+                    document.getElementsByTagName('p')[0].innerText = "|";
                     init(false);
                 }else if(!yep){
                     for(var i = 0; i < editedShapes.length; i++){
