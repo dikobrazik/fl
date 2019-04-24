@@ -98,6 +98,7 @@
                                     n:5,
                                     size:'big',
                                     color:"red",
+                                    stroke:'stroke',
                                 },
                                 {
                                     mark:1,
@@ -120,6 +121,7 @@
                                     n:5,
                                     size:'small',
                                     color:"red",
+                                    stroke:'stroke',
                                 },
                                 {
                                     mark:3,
@@ -175,6 +177,7 @@
                                     n:10,
                                     size:'small',
                                     color:"green",
+                                    stroke:'stroke',
                                 },
                                 {
                                     mark:1,
@@ -220,6 +223,7 @@
                                     mark:3,
                                     n:4,
                                     size:'medium',
+                                    stroke:'stroke',
                                     color:"red",
                                 },
                                 {
@@ -265,6 +269,7 @@
                                     mark:3,
                                     n:4,
                                     size:'medium',
+                                    stroke:'stroke',
                                     color:"red",
                                 },
                                 {
@@ -289,6 +294,7 @@
                                     mark:2,
                                     n:6,
                                     size:'medium',
+                                    stroke:'stroke',
                                     color:"green",
                                 },
                                 {
@@ -379,8 +385,8 @@
             const star = options =>{
                 var starPath = new Path2D();
                 if(options.size == 'small') r=4,R=8;
-                else if(options.size == 'medium') r=5,R=10;
-                else if(options.size == 'big') r=6,R=12;
+                else if(options.size == 'medium') r=6,R=12;
+                else if(options.size == 'big') r=8,R=16;
                 var ctx = getContext();
                 //ctx.globalCompositeOperation = "source-over";
                 if(options.color !== undefined){
@@ -407,7 +413,8 @@
                     starPath.arc(options.x,options.y,r,0 * Math.PI, 2 * Math.PI)
                 }
                 starPath.closePath();
-                ctx.fill(starPath);
+                if(options.stroke == 'stroke') ctx.stroke(starPath);
+                else  ctx.fill(starPath);
                 shapes.push({
                     path:starPath,
                     hint:options.hint,
@@ -513,6 +520,7 @@
                                 hint:'Это фигура'+k,
                                 mark:part[k].mark,
                                 circle:i,
+                                stroke:part[k].stroke,
                             })
                         }
                     }
