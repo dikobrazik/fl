@@ -17,48 +17,83 @@
                 border-radius: 20px;
                 text-align: center;
             }
+            table {
+            border-collapse: collapse;
+            }
+            table td, table th {
+            border: 1px solid rgba(137, 43, 226, 0.603);
+            }
+            table tr:first-child th {
+            border-top: 0;
+            }
+            table tr:last-child td {
+            border-bottom: 0;
+            }
+            table tr td:first-child,
+            table tr th:first-child {
+            border-left: 0;
+            }
+            table tr td:last-child,
+            table tr th:last-child {
+            border-right: 0;
+            }
         </style>
     </head>
     <body>
         <div>
-            <canvas id="myCanvas" width=600 height=600>
+            <canvas id="myCanvas" width=800 height=800>
 
             </canvas>
             <div id='hint'> 
                 <p>
-                    Подсказка
+                    <!-- Подсказка -->
                 </p>
             </div>
         </div>
         <script>
             var data = {
-                parts:7,
+                parts:7 ,
+                names:[
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                ],
                 circles:[
                     {
-                        radius:50,
+                        name:'sloy1',
                         qr:[
                             [
                                 {
+                                    mark:1,
                                     n:7,
                                     color:"green",
                                 },
                                 {
+                                    mark:1,
                                     n:5,
                                     color:"black",
                                 },
                                 {
+                                    mark:2,
                                     n:7,
                                     color:"blue",
                                 },
                                 {
+                                    mark:2,
                                     n:5,
                                     color:"red",
                                 },
                                 {
+                                    mark:1,
                                     n:9,
                                     color:"purple",
                                 },
                                 {
+                                    mark:3,
                                     n:5,
                                     color:"black",
                                 },
@@ -71,6 +106,7 @@
                                     color:"red",
                                 },
                                 {
+                                    mark:3,
                                     n:9,
                                     color:"purple",
                                 },
@@ -79,6 +115,7 @@
                             [],
                             [
                                 {
+                                    mark:2,
                                     n:0,
                                     color:"red",
                                 },
@@ -86,7 +123,7 @@
                         ]
                     },
                     {
-                        radius:100,
+                        name:'sloy2',
                         qr:[
                             [
                                 {
@@ -98,6 +135,7 @@
                                     color:"purple",
                                 },
                                 {
+                                    mark:2,
                                     n:6,
                                     color:"orange",
                                 },
@@ -106,6 +144,7 @@
                                     color:"red",
                                 },
                                 {
+                                    mark:2,
                                     n:4,
                                     color:"orange",
                                 },
@@ -114,6 +153,7 @@
                                     color:"green",
                                 },
                                 {
+                                    mark:1,
                                     n:5,
                                     color:"purple",
                                 },
@@ -126,6 +166,7 @@
                                     color:"red",
                                 },
                                 {
+                                    mark:3,
                                     n:4,
                                     color:"orange",
                                 },
@@ -145,8 +186,9 @@
                                     color:"green",
                                 },
                                 {
+                                    mark:3,
                                     n:4,
-                                    color:"green",
+                                    color:"purple",
                                 },
                                 {
                                     n:3,
@@ -154,7 +196,7 @@
                                 },
                                 {
                                     n:"23",
-                                    color:"green",
+                                    color:"red",
                                 },
                             ],
                             [   {
@@ -163,13 +205,14 @@
                                 },
                                 {
                                     n:6,
-                                    color:"green",
+                                    color:"orange",
                                 },
                                 {
                                     n:7,
-                                    color:"green",
+                                    color:"blue",
                                 },
                                 {
+                                    mark:2,
                                     n:8,
                                     color:"green",
                                 },
@@ -177,13 +220,15 @@
                             [
                                 {
                                     n:33,
-                                    color:"green",
+                                    color:"brown",
                                 },
                                 {
+                                    mark:3,
                                     n:4,
-                                    color:"green",
+                                    color:"red",
                                 },
                                 {
+                                    mark:3,
                                     n:5,
                                     color:"green",
                                 },
@@ -195,10 +240,11 @@
                         ]
                     },
                     {
-                        radius:150,
+                        name:'sloy3 ',
                         qr:[
                             [
                                 {
+                                    mark:2,
                                     n:6,
                                     color:"green",
                                 },
@@ -215,6 +261,7 @@
                                     color:"red",
                                 },
                                 {
+                                    mark:3,
                                     n:8,
                                     color:"green",
                                 },
@@ -223,17 +270,21 @@
                                     color:"purple",
                                 },
                                 {
+                                    mark:2,
                                     n:5,
                                     color:"green",
                                 },
                                 {
+                                    mark:3,
                                     n:9,
                                     color:"green",
                                 },
                                 {
+                                    mark:1,
                                     n:6,
                                     color:"red",
                                 },
+                                
                             ],
                             [
 
@@ -257,8 +308,9 @@
             
             const getContext = () => document.getElementById('myCanvas').getContext('2d');
             
+            var circles = [];
             var shapes = [];
-            var w=600, h =600;
+            var w=document.getElementById('myCanvas').width, h=document.getElementById('myCanvas').height;
             var leftOffset = document.getElementById('myCanvas').offsetLeft;
             var topOffset = document.getElementById('myCanvas').offsetTop;
             var ctx = getContext();
@@ -269,7 +321,18 @@
                 else if(options.size == 'medium') r=5,R=10;
                 else if(options.size == 'big') r=6,R=12;
                 var ctx = getContext();
-                if(options.color !== undefined) ctx.fillStyle = options.color;
+                //ctx.globalCompositeOperation = "source-over";
+                if(options.color !== undefined){
+                    if(!options.grad){
+                        ctx.fillStyle = options.color;
+                    }else{
+                        var gradient = ctx.createRadialGradient(options.x,options.y, 2,options.x,options.y,8);
+                        gradient.addColorStop(0, 'white');
+                        gradient.addColorStop(1, options.color);
+                        ctx.fillStyle = gradient;
+                    }
+                        
+                }
                 if(options.n != 0){
                     for(var i = 0,a = 0; i<2*options.n+1;i++,a += Math.PI / options.n){
                         var l = i % 2 == 0 ? r : R;
@@ -282,148 +345,109 @@
                 }else{
                     starPath.arc(options.x,options.y,r,0 * Math.PI, 2 * Math.PI)
                 }
-                //starPath.arc(options.x,options.y,R,0 * Math.PI, 2 * Math.PI)
+                starPath.closePath();
                 ctx.fill(starPath);
                 shapes.push({
                     path:starPath,
                     hint:options.hint,
+                    x:options.x,
+                    y:options.y,
+                    size:options.size,
+                    color:options.color,
+                    n:options.n,
+                    mark:options.mark,
+                    circle:options.circle,
                 });
                 ctx.fillStyle = 'black';
             };
-            
-            
-            init();
-            function init(){
+            var degrees = (len, rad)=>{
+                return 360*len/(2*rad*Math.PI);
+            }
+
+            function wrapText(context, text, marginLeft, marginTop, maxWidth)
+            {
+                var txt = [];
+                function getFontHeight(font) {
+                    var parent = document.createElement("span");
+                    parent.appendChild(document.createTextNode("height"));
+                    var block = document.createElement("div");
+                    block.setAttribute("id", "hg");
+                    document.body.appendChild(block);
+                    document.getElementById('hg').appendChild(parent);
+                    parent.style.cssText = "font: " + font + "; white-space: nowrap; display: inline;";
+                    var height = parent.offsetHeight;
+                    document.body.removeChild(block);
+                    return height;
+                }
+                context.font = "1em serif";
+                var lineHeight = getFontHeight("serif");
+                var words = text.split(" ");
+                var countWords = words.length;
+                var line = "";
+                for (var n = 0; n < countWords; n++) {
+                    var testLine = line + words[n] + " ";
+                    var testWidth = context.measureText(testLine).width;
+                    if (testWidth > maxWidth) {
+                        txt.push(line)
+                        line = words[n] + " ";
+                    }
+                    else {
+                        line = testLine;
+                    }
+                }
+                txt.push(line)
+                marginTop -= lineHeight*(txt.length/2)-15   ;
+                for(var i = 0 ; i<txt.length; i++){
+                    context.fillText(txt[i], marginLeft-maxWidth/2+20, marginTop);
+                    marginTop+=lineHeight;
+                }
+            }
+
+            init(true);
+            function init(editCircles){
                 ctx.clearRect(0,0,w,h)
                 shapes = [];
-                ctx.beginPath();
+                if(editCircles)circles=[];
                 var partDegree = 360/data.parts;
-                for(var i = 0; i < data.parts; i++){
-                    ctx.moveTo(w/2,h/2);
-                    ctx.lineTo(
-                        w/2+(data.circles[2].radius+20)*Math.sin((partDegree*i) * Math.PI / 180),
-                        h/2+(data.circles[2].radius+20)*Math.cos((partDegree*i) * Math.PI / 180)
-                    );
-                };
-                ctx.stroke();
+                var alpha = (180-partDegree)/2;
                 for(var i = 0; i<data.circles.length; i++){
-                    var circle = data.circles[i];
-                    var radius = i==0?0:data.circles[i-1].radius;
-                    ctx.beginPath();
-                    ctx.arc(w/2,h/2,circle.radius,0 * Math.PI, 2 * Math.PI)
-                    ctx.stroke();
-                    if(i==0) var delta = circle.radius;
-                    else var delta = (circle.radius-data.circles[i-1].radius);
+                    if(circles[i]===undefined) circles[i]=0;
                     
+                    var circle = data.circles[i];
+                    if(i!=0 && editCircles) circles[i] += circles[i-1] 
+                    /*
+                    *       radius - радиус предыдущего круга
+                    */
+                    var radius = i==0?0:circles[i-1];
+                    /*
+                    *       delta - расстояние между кругами
+                    */
+                    if(editCircles) var delta = 0;
+                    else var delta = (circles[i]-circles[i-1]);
+
                     for(var p = 0; p < data.parts; p++){
                         var part = circle.qr[p];
                         if(part === undefined) continue;
                         var ply = 1;
                         if(delta < 18){
-                            data.circles[i].radius+=18;
-                            //alert('Не помещается, увеличиваю ' +i+'-й круг...')
-                            return init();
+                            circles[i] +=18;
+                            delta+=18;
                         }
-                        if(i==0){
-                            ply=2;
-                            for(var k=0, num = ((24*180)/(Math.PI*(radius+12*ply)))/2;k<part.length;k++, num += ((16*180)/(Math.PI*(radius+12*ply)))){
-                                if(num+5>partDegree){
-                                    num=((12*180)/(Math.PI*(radius+16*ply)))/2;
-                                    if(k==0 && i==0) {
-                                        num=partDegree/2;
-                                    }
-                                    ply+=1.4;
-                                }
-                                if(18*ply > delta){
-                                    data.circles[i].radius+=16;
-                                    //alert('Не помещается, увеличиваю ' +i+'-й круг...')
-                                    return init();
-                                }
-                                if(k==0){
-                                    x=w/2+(radius+16*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
-                                    y=h/2+(radius+16*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
-                                }else if(ply>1){
-                                    x=w/2+(radius+16*ply)*Math.sin((num+5+partDegree*p) * Math.PI / 180);
-                                    y=h/2+(radius+16*ply)*Math.cos((num+5+partDegree*p) * Math.PI / 180);
-                                }
-                                star({
-                                    n:part[k].n,
-                                    size:'big',
-                                    x:x,
-                                    y:y,
-                                    color:part[k].color,
-                                    hint:'Это фигура'+k,
-                                })
-                                /*if(part[k].size == 'small') num+=8;
-                                else if(part[k].size == 'medium') num+=10;
-                                else if(part[k].size == 'big') num+=12;*/
+                        if(i==0 && data.parts !=4) ply=2;
+                        for(var k=0, num = degrees(14, radius+24*ply);k<part.length;k++, num += degrees(26, radius+24*ply)){
+                            if(k==0 && i==0) {
+                                num=partDegree/2;
                             }
-                        }else{
-                            for(var k=0, num = ((24*180)/(Math.PI*(radius+12*ply)))/2;k<part.length;k++, num += ((24*180)/(Math.PI*(radius+12*ply)))){
-                                
-                                if(num+4>partDegree){
-                                    num=((24*180)/(Math.PI*(radius+16*ply)))/1.8;
-                                    ply+=1.4;
-                                }
-                                if(20*ply > delta){
-                                    data.circles[i].radius+=12;
-                                    //alert('Не помещается, увеличиваю ' +i+'-й круг...')
-                                    return init();
-                                }
-                                if(ply>1){
-                                    x=w/2+(radius+16*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
-                                    y=h/2+(radius+16*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
-                                }else{
-                                    x=w/2+(radius+14)*Math.sin((num+1+partDegree*p) * Math.PI / 180);
-                                    y=h/2+(radius+14)*Math.cos((num+1+partDegree*p) * Math.PI / 180);
-                                }
-                                
-                                star({
-                                    n:part[k].n,
-                                    size:'big',
-                                    x:x,
-                                    y:y,
-                                    color:part[k].color,
-                                    hint:'Это фигура'+k,
-                                })
-                                /*if(part[k].size == 'small') num+=8;
-                                else if(part[k].size == 'medium') num+=10;
-                                else if(part[k].size == 'big') num+=12;*/
-                            }
-                        }
-                        /*
-                        for(var k=0, num = ((24*180)/(Math.PI*(radius+12*ply)))/2;k<part.length;k++, num += ((24*180)/(Math.PI*(radius+12*ply)))){
-                            if(i==0 && num>partDegree){
-                                num=((12*180)/(Math.PI*(radius+16*ply)))/1.8;
-                                if(k==0 && i==0) {
-                                    num=partDegree/2;
-                                }
+                            if(num+5>degrees(2*(radius+24*ply)*Math.cos(alpha* Math.PI / 180), radius+24*ply)){
+                                num = degrees(14, radius+24*ply);
                                 ply+=1;
-                                if(18*ply > delta){
-                                    data.circles[i].radius+=18;
-                                    //alert('Не помещается, увеличиваю ' +i+'-й круг...')
-                                    return init();
-                                }
                             }
-                            else if(num+4>partDegree){
-                                num=((24*180)/(Math.PI*(radius+16*ply)))/1.8;
-                                ply+=1;
-                                if(18*ply > delta){
-                                    data.circles[i].radius+=18;
-                                    //alert('Не помещается, увеличиваю ' +i+'-й круг...')
-                                    return init();
-                                }
+                            if(24*ply > delta){
+                                circles[i] +=20;
+                                delta +=20;
                             }
-                            if(i==0 && k==0){
-                                x=w/2+(radius+16*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
-                                y=h/2+(radius+16*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
-                            }else if(ply>1){
-                                x=w/2+(radius+20*ply)*Math.sin((num+partDegree*p) * Math.PI / 180);
-                                y=h/2+(radius+20*ply)*Math.cos((num+partDegree*p) * Math.PI / 180);
-                            }else{
-                                x=w/2+(radius+12)*Math.sin((num+partDegree*p) * Math.PI / 180);
-                                y=h/2+(radius+12)*Math.cos((num+partDegree*p) * Math.PI / 180);
-                            }
+                            x=w/2+(radius+26*ply-12)*Math.sin((num+partDegree*p) * Math.PI / 180);
+                            y=h/2+(radius+26*ply-12)*Math.cos((num+partDegree*p) * Math.PI / 180);
                             
                             star({
                                 n:part[k].n,
@@ -432,29 +456,198 @@
                                 y:y,
                                 color:part[k].color,
                                 hint:'Это фигура'+k,
+                                mark:part[k].mark,
+                                circle:i,
                             })
-                            /*if(part[k].size == 'small') num+=8;
-                            else if(part[k].size == 'medium') num+=10;
-                            else if(part[k].size == 'big') num+=12;
-                        }*/
+                        }
                     }
                 }
+                
+                for(var i = 0; i < data.parts; i++){
+                    ctx.beginPath();
+                    ctx.moveTo(w/2,h/2);
+                    ctx.lineTo(
+                        w/2+(circles[circles.length-1]+20)*Math.sin((partDegree*i) * Math.PI / 180),
+                        h/2+(circles[circles.length-1]+20)*Math.cos((partDegree*i) * Math.PI / 180)
+                    );
+                    ctx.stroke();
+                    if(data.names[i] !== undefined) {
+                        x = w/2+(circles[circles.length-1]+120)*Math.sin((partDegree*i+partDegree/2) * Math.PI / 180);
+                        y = h/2+(circles[circles.length-1]+120)*Math.cos((partDegree*i+partDegree/2) * Math.PI / 180);
+                        wrapText(getContext(), data.names[i], x,y,200)
+                    }
+                } 
+                for(var i = 0; i < circles.length; i++){
+                    ctx.beginPath();
+                    ctx.arc(w/2,h/2,circles[i],0 * Math.PI, 2 * Math.PI)
+                    ctx.stroke();
+                }
             }
+            function addTable(s){
+                if(document.getElementsByTagName('table')[0] !== undefined) document.getElementsByTagName('table')[0].remove()
+                var t = document.createElement('table');
+                t.style.width = '30vw'
+                var thead = document.createElement('thead');
+                t.appendChild(thead);
+                thead.innerHTML = `
+                <tr>
+                    <th></th>
+                    <th>Hint</th>
+                    <th>Color</th>
+                    <th>Size</th>
+                    <th>N</th>
+                    <th>Mark</th>
+                </tr>
+                `
+                var table = document.createElement('tbody');
+                t.appendChild(table);
+                
+                for(var i = 0; i < s.length; i++){
+                    if(s[i] === undefined) continue
+                    if(s[i].ss.length == 0) continue
+                    td = document.createElement('td');
+                    tr = document.createElement('tr');
+                    td.style.verticalAlign = 'baseline'
+                    td.style.width = '5vw'
+                    td.innerText = s[i].name+':';
+                    tr.appendChild(td);
+                    table.appendChild(tr);
+                    for(var j = 0; j < s[i].ss.length; j++){
+                        tr = document.createElement('tr');
+                        tr.appendChild(document.createElement('td'));
+                        //if(s[i].ss[j].hint === undefined) continue;
+                        for (key in s[i].ss[j]){
+                            td = document.createElement('td');
+                            td.style.verticalAlign = 'baseline';
+                            td.innerHTML = s[i].ss[j][key];
+                            tr.appendChild(td);
+                        }
+                        table.appendChild(tr);
+                    }
+                }
+                document.getElementById('hint').appendChild(t)
+            }
+            
+            var index, oldIndex;
+            var editedShapes = [];
             document.getElementById('myCanvas').addEventListener('mousemove',(e)=> {
-                var yep = false;
-                var x = e.clientX - leftOffset,
-                    y = e.clientY - topOffset;
+                
+                var yep = false, lay=false;
+                var x = e.pageX - leftOffset,
+                    y = e.pageY - topOffset;
                 ctx = getContext();
+               
+                var shape;
                 for(var i = 0; i < shapes.length; i++){
                     yep = ctx.isPointInPath(shapes[i].path, x, y);
-                    if(yep) break;
+                    if(yep){
+                        shape = shapes[i];
+                        break;
+                    }
+                }
+                cx = x-w/2;
+                cy = y-h/2;
+                for(var i = 0; i < circles.length; i++){
+                    if(circles[circles.length-1] < Math.sqrt(cx*cx+cy*cy)){
+                        index = 0, oldIndex = 1;
+                        break;
+                    }
+                    function lay(rad0, rad1){
+                        ctx.beginPath();
+                        ctx.arc(w/2,h/2,rad1,0 * Math.PI, 2 * Math.PI)
+                        ctx.arc(w/2,h/2,rad0,0 * Math.PI, 2 * Math.PI, true)
+                        ctx.globalCompositeOperation = "destination-over";
+                        ctx.fillStyle = '#ffb5fb'
+                        ctx.fill();
+                        ctx.globalCompositeOperation = "source-over";
+                        lay = true;
+                        if(index !== undefined){
+                            oldIndex = index;
+                            index = i;
+                        }else{
+                            index = i;
+                            oldIndex = i;
+                        }
+                    }
+                    if(i!=0) {
+                        if(circles[i-1] <= Math.sqrt(cx*cx+cy*cy) && circles[i] >= Math.sqrt(cx*cx+cy*cy)){
+                            lay(circles[i], circles[i-1]);
+                            document.getElementsByTagName('p')[0].innerText = data.circles[i].name;
+                        }
+                    }else{
+                        if(0 <= Math.sqrt(cx*cx+cy*cy) && circles[i] > Math.sqrt(cx*cx+cy*cy)){
+                            lay(circles[i], 0);
+                            document.getElementsByTagName('p')[0].innerText = data.circles[i].name;
+                        }
+                    }
                 }
                 if (yep) {
-                    document.getElementsByTagName('p')[0].innerText = shapes[i].hint;
-                }else{
-                    document.getElementsByTagName('p')[0].innerText = "Подсказка";
+                    //document.getElementsByTagName('p')[0].innerText = shape.hint;
+                    star({
+                        n:shape.n,
+                        size:shape.size,
+                        x:shape.x,
+                        y:shape.y,
+                        color:shape.color,
+                        hint:'Это фигура',
+                        grad:true,
+                        circle:shapes[i].circle,
+                    })
+                    if(editedShapes.indexOf(shapes.indexOf(shape)) == -1) editedShapes.push(shapes.indexOf(shape));
+                    
+                    if(shape.mark!==undefined){
+                        for(var i = 0; i < shapes.length; i++){
+                            if(shapes[i].mark!==undefined && shapes[i].mark == shape.mark){
+                                star({
+                                    n:shapes[i].n,
+                                    size:shapes[i].size,
+                                    x:shapes[i].x,
+                                    y:shapes[i].y,
+                                    color:shapes[i].color,
+                                    hint:'Это фигура',
+                                    grad:true,
+                                    circle:shapes[i].circle,
+                                })
+                                if(editedShapes.indexOf(i) == -1)editedShapes.push(i);
+                            }
+                        }
+                    }
+                    var s = [];
+                    for(var i = 0; i < editedShapes.length; i++){
+                        shape = shapes[editedShapes[i]];
+                        if(s[shape.circle] === undefined){
+                            s[shape.circle] = {};
+                            s[shape.circle].name = data.circles[shape.circle].name;
+                            s[shape.circle].ss = [];
+                        }
+                        s[shape.circle].ss.push({
+                            0:shape.hint,
+                            1:shape.color,
+                            2:shape.size,
+                            3:shape.n,
+                            4:shape.mark?shape.mark:'-',
+                        })
+                    }
+                    addTable(s);
+                }else if(index!=oldIndex){
+                    document.getElementsByTagName('p')[0].innerText = "";
+                    init(false);
+                }else if(!yep){
+                    for(var i = 0; i < editedShapes.length; i++){
+                        star({
+                            n:shapes[editedShapes[i]].n,
+                            size:shapes[editedShapes[i]].size,
+                            x:shapes[editedShapes[i]].x,
+                            y:shapes[editedShapes[i]].y,
+                            color:shapes[editedShapes[i]].color,
+                            hint:'Это фигура',
+                        })
+                    }
+                    editedShapes = [];
+                if(document.getElementsByTagName('table')[0] !== undefined) document.getElementsByTagName('table')[0].remove();                    
                 }
             });
+            
         </script>
     </body>
 </html>
