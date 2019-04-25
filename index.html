@@ -41,12 +41,12 @@
     </head>
     <body>
         <div>
-            <canvas id="myCanvas" width=1200 height=800>
+            <canvas id="myCanvas" width=1200 height=600>
 
             </canvas>
             <div id='hint'> 
                 <p>
-                    <!-- Подсказка -->
+                    |
                 </p>
             </div>
         </div>
@@ -366,14 +366,19 @@
             
             const getContext = () => document.getElementById('myCanvas').getContext('2d');
             
-            var scale = 0.7;
+            var scale = 1;
             var circles = [];
             var shapes = [];
             var w=document.getElementById('myCanvas').width, h=document.getElementById('myCanvas').height;
             var leftOffset = document.getElementById('myCanvas').offsetLeft;
             var topOffset = document.getElementById('myCanvas').offsetTop;
             var ctx = getContext();
-
+            function draw(width, height) {
+                getContext().canvas.width  = width;
+                getContext().canvas.height = height;
+                h = height;
+                w=width;
+            }
             document.getElementById('plus').onclick = function() {
                 scale+=0.1
                 init(true);
@@ -476,6 +481,7 @@
                 ctx.clearRect(0,0,w,h)
                 shapes = [];
                 if(editCircles)circles=[];
+                else if(editCircles === undefined) draw(1200, circles[circles.length-1]*2.5);
                 var partDegree = 360/data.parts;
                 var alpha = (180-partDegree)/2;
                 for(var i = 0; i<data.circles.length; i++){
@@ -496,17 +502,17 @@
                             delta+=18*scale;
                         }
                         if(i==0 && data.parts !=4) ply=2;
-                        for(var k=0, num = degrees(14, radius+24*scale*ply);k<part.length;k++, num += degrees(26, radius+24*scale*ply)){
+                        for(var k=0, num = degrees(14, radius+24*scale*ply);k<part.length;k++, num += degrees(34, radius+24*scale*ply)){
                             if(k==0 && i==0) {
                                 num=partDegree/2;
                             }
-                            if(num+5*scale>degrees(2*(radius+24*scale*ply)*Math.cos(alpha* Math.PI / 180), radius+24*scale*ply)){
+                            if(num+5>degrees(2*(radius+24*scale*ply)*Math.cos(alpha* Math.PI / 180), radius+24*scale*ply)){
                                 num = degrees(14, radius+24*scale*ply);
                                 ply+=1;
                             }
                             if(24*scale*ply > delta){
-                                circles[i] +=20*scale;
-                                delta +=20*scale;
+                                circles[i] +=24*scale;
+                                delta +=24*scale;
                             }
                             x=w/2+(radius+26*scale*ply-12*scale)*Math.sin((num+partDegree*p) * Math.PI / 180);
                             y=h/2+(radius+26*scale*ply-12*scale)*Math.cos((num+partDegree*p) * Math.PI / 180);
@@ -535,8 +541,8 @@
                     );
                     ctx.stroke();
                     if(data.names[i] !== undefined) {
-                        x = w/2+(circles[circles.length-1]+120)*Math.sin((partDegree*i+partDegree/2) * Math.PI / 180);
-                        y = h/2+(circles[circles.length-1]+120)*Math.cos((partDegree*i+partDegree/2) * Math.PI / 180);
+                        x = w/2+(circles[circles.length-1]+130)*Math.sin((partDegree*i+partDegree/2) * Math.PI / 180);
+                        y = h/2+(circles[circles.length-1]+30)*Math.cos((partDegree*i+partDegree/2) * Math.PI / 180);
                         wrapText(getContext(), data.names[i], x,y,200)
                     }
                 } 
@@ -545,6 +551,7 @@
                     ctx.arc(w/2,h/2,circles[i],0 * Math.PI, 2 * Math.PI)
                     ctx.stroke();
                 }
+                if(editCircles) return init();
             }
             function addTable(s){
                 if(document.getElementsByTagName('table')[0] !== undefined) document.getElementsByTagName('table')[0].remove()
