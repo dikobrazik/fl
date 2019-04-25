@@ -438,8 +438,8 @@
                 if(options.stroke == 'stroke') {
                     if(gradient === undefined){
                         ctx.fillStyle = 'white';
+                        ctx.fill(starPath);
                     }
-                    ctx.fill(starPath);
                     ctx.stroke(starPath);
                 }
                 else ctx.fill(starPath);
