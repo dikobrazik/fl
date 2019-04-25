@@ -436,7 +436,13 @@
                 }
                 starPath.closePath();
                 if(options.stroke == 'stroke') {
-                    if(gradient === undefined){
+                    if(gradient !== undefined){
+                        gradient = ctx.createRadialGradient(options.x,options.y, 0,options.x,options.y,R);
+                        gradient.addColorStop(0.5, 'white');
+                        gradient.addColorStop(1, "black");
+                        ctx.fillStyle = gradient;
+                        ctx.fill(starPath);
+                    }else{
                         ctx.fillStyle = 'white';
                         ctx.fill(starPath);
                     }
