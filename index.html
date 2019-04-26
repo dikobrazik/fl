@@ -404,6 +404,7 @@
                 if(scale > 0.65)scale-=0.1
                 init(true);
             };
+
             const star = options =>{
                 var starPath = new Path2D();
                 if(options.size == 'small') r=4,R=8;
@@ -416,7 +417,8 @@
                         ctx.fillStyle = options.color;
                     }else{
                         var gradient = ctx.createRadialGradient(options.x,options.y, 2,options.x,options.y,8);
-                        gradient.addColorStop(0, 'white');
+                        gradient.addColorStop(0, options.color);
+                        gradient.addColorStop(0.9, 'white');
                         gradient.addColorStop(1, options.color);
                         ctx.fillStyle = gradient;
                     }
@@ -431,6 +433,18 @@
                         }
                         starPath.lineTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
                     };
+                    if(options.grad && options.stroke == 'stroke'){
+                        starPath.closePath();
+                        for(var i = 0,a = 0; i<2*options.n+1;i++,a += Math.PI / options.n){
+                            var l = i % 2 == 0 ? (r-2)*scale : (R-2)*scale;
+                            if(i==0){
+                                starPath.moveTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
+                                continue;
+                            }
+                            starPath.lineTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
+                            
+                        };
+                    }
                 }else{
                     starPath.arc(options.x,options.y,r,0 * Math.PI, 2 * Math.PI)
                 }
@@ -689,7 +703,6 @@
                     }
                 }
                 if (yep) {
-                    //document.getElementsByTagName('p')[0].innerText = shape.hint;
                     star({
                         n:shape.n,
                         size:shape.size,
@@ -745,7 +758,6 @@
                     init(false);
                 }else if(!yep){
                     for(var i = 0; i < editedShapes.length; i++){
-                        console.log(shapes[i].stroke)
                         star({
                             n:shapes[editedShapes[i]].n,
                             size:shapes[editedShapes[i]].size,
