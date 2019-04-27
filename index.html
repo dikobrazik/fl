@@ -422,20 +422,40 @@
                         }
                         starPath.lineTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
                     };
+                    if(options.grad){
+                        ctx.strokeStyle = 'black';
+                        ctx.stroke(starPath);
+                        starPath = new Path2D()
+                        for(var i = 0,a = 0; i<2*options.n+1;i++,a += Math.PI / options.n){
+                            var l = i % 2 == 0 ? (r-2)*scale: (R-2)*scale;
+                            if(i==0){
+                                starPath.moveTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
+                                continue;
+                            }
+                            starPath.lineTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
+                        };
+                    }
                 }else{
                     starPath.arc(options.x,options.y,r,0 * Math.PI, 2 * Math.PI)
+                    if(options.grad){
+                        ctx.stroke(starPath); 
+                        starPath = new Path2D()
+                        starPath.arc(options.x,options.y,r-i,0 * Math.PI, 2 * Math.PI)
+                        ctx.stroke(starPath);  
+                    }
                 }
                 starPath.closePath();
                 if(options.stroke == 'stroke') {
                     ctx.fillStyle = 'white';
                     ctx.fill(starPath);
-                    if(options.grad)ctx.strokeStyle = '#0000FF';
+                    if(options.grad) ctx.strokeStyle = 'orange';
                     ctx.stroke(starPath);
                     ctx.strokeStyle = 'black';
                 }else{
                     ctx.fillStyle = options.color;
+                    ctx.fill(starPath);
                     if(options.grad){
-                        ctx.strokeStyle = '#0000FF';
+                        ctx.strokeStyle = 'orange';
                         ctx.stroke(starPath);
                         ctx.strokeStyle = 'black';
                     }else{
@@ -443,7 +463,7 @@
                         ctx.stroke(starPath);
                         ctx.strokeStyle = 'black';
                     }
-                    ctx.fill(starPath);
+                    
                 } 
                 shapes.push({
                     path:starPath,
