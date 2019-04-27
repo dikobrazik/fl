@@ -415,7 +415,7 @@
                 //ctx.globalCompositeOperation = "source-over";
                 if(options.n != 0){
                     for(var i = 0,a = 0; i<2*options.n+1;i++,a += Math.PI / options.n){
-                        var l = i % 2 == 0 ? options.grad? (r-1)*scale:r*scale : options.grad? (R-1)*scale:R*scale;
+                        var l = i % 2 == 0 ? options.grad? (r)*scale:r*scale : options.grad? (R)*scale:R*scale;
                         if(i==0){
                             starPath.moveTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
                             continue;
@@ -423,11 +423,12 @@
                         starPath.lineTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
                     };
                     if(options.grad){
-                        ctx.strokeStyle = 'black';
+                        ctx.strokeStyle = 'orange';
                         ctx.stroke(starPath);
+                        ctx.strokeStyle = 'black';
                         starPath = new Path2D()
                         for(var i = 0,a = 0; i<2*options.n+1;i++,a += Math.PI / options.n){
-                            var l = i % 2 == 0 ? (r-2)*scale: (R-2)*scale;
+                            var l = i % 2 == 0 ? (r-1)*scale: (R-1)*scale;
                             if(i==0){
                                 starPath.moveTo(options.x + l * Math.cos(a),options.y + l * Math.sin(a));
                                 continue;
@@ -438,9 +439,11 @@
                 }else{
                     starPath.arc(options.x,options.y,r,0 * Math.PI, 2 * Math.PI)
                     if(options.grad){
-                        ctx.stroke(starPath); 
+                        ctx.strokeStyle = 'orange';
+                        ctx.stroke(starPath);
+                        ctx.strokeStyle = 'black'; 
                         starPath = new Path2D()
-                        starPath.arc(options.x,options.y,r-i,0 * Math.PI, 2 * Math.PI)
+                        starPath.arc(options.x,options.y,r-1,0 * Math.PI, 2 * Math.PI)
                         ctx.stroke(starPath);  
                     }
                 }
@@ -448,16 +451,14 @@
                 if(options.stroke == 'stroke') {
                     ctx.fillStyle = 'white';
                     ctx.fill(starPath);
-                    if(options.grad) ctx.strokeStyle = 'orange';
+                    if(options.grad) ctx.strokeStyle = 'black';
                     ctx.stroke(starPath);
                     ctx.strokeStyle = 'black';
                 }else{
                     ctx.fillStyle = options.color;
                     ctx.fill(starPath);
                     if(options.grad){
-                        ctx.strokeStyle = 'orange';
                         ctx.stroke(starPath);
-                        ctx.strokeStyle = 'black';
                     }else{
                         ctx.strokeStyle = options.color;
                         ctx.stroke(starPath);
