@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="js/scripts.js"></script>
+  <script>
+    
+  </script>
+</head>
+<body>
+  <div class="col-10 my-3">
+    <div id="form">
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Фамилия</span>
+          </div>
+          <input type="text" id="surname" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Имя</span>
+          </div>
+          <input type="text" id="name" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Отчество</span>
+          </div>
+          <input type="text" id="lastname" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <div class="input-group input-group-sm mb-3">
+            <input type="date" id="date" атрибуты>
+        </div>
+        <button type="button" id='add' class="btn btn-secondary">Добавить показатель</button>
+        <button type="button" id="save" class="btn btn-primary">Сохранить</button>
+    </div>
+  </div>
+  <script>
+    document.getElementById('save').addEventListener('click', ()=>{
+      a = {}
+      for(var element of document.getElementsByTagName('input')){
+        a[element.id] = element.value
+      }
+      this.add(a)
+    })
+    document.getElementById('add').addEventListener('click', ()=>{
+      var el =  document.createElement('div')
+      el.innerHTML = `<div class="input-group my-2">
+        <input type="text" class="form-control" aria-label="Text input with dropdown button">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+          <div class="dropdown-menu">
+              <a class="dropdown-item" href="#">Дата госп-и</a>
+              <a class="dropdown-item" href="#">койко-день</a>
+              <a class="dropdown-item" href="#">возраст</a>
+              <a class="dropdown-item" href="#">пол</a>
+              <a class="dropdown-item" href="#">Диагноз ЛОП/СОП/ТОП</a>
+              <a class="dropdown-item" href="#">диагноз ОП/ИПН/СПН/ХП</a>
+              <a class="dropdown-item" href="#">осложнения</a>
+              <a class="dropdown-item" href="#">Вид операции</a>
+              <a class="dropdown-item" href="#">сопутств.заб.</a>
+              <a class="dropdown-item" href="#">этиология</a>
+              <a class="dropdown-item" href="#">исход</a>
+              <a class="dropdown-item" href="#">Ranson</a>
+              <a class="dropdown-item" href="#">ССВР</a>
+              <a class="dropdown-item" href="#">None</a>
+              <a class="dropdown-item" href="#">М-APACHE II</a>
+              <a class="dropdown-item" href="#">к/день в ОАРИТ</a>
+              <a class="dropdown-item" href="#">№сутки в ОАРИТ</a>
+              <a class="dropdown-item" href="#">нач.заб.,час</a>
+              <a class="dropdown-item" href="#">тип госпитализации</a>
+              <a class="dropdown-item" href="#">Сутки перевода</a>
+              <a class="dropdown-item" href="#">№ госп-и</a>
+              <a class="dropdown-item" href="#">ранн.опер.</a>
+              <a class="dropdown-item" href="#">расп.боли</a>
+              <a class="dropdown-item" href="#">нарк.анальг.</a>
+              <a class="dropdown-item" href="#">мн.рвота</a>
+              <a class="dropdown-item" href="#">рв.коф.гущ.</a>
+              <a class="dropdown-item" href="#">BMI</a>
+              <a class="dropdown-item" href="#">c-м Грея-К.</a>
+              <a class="dropdown-item" href="#">Группа крови</a>
+              <a class="dropdown-item" href="#">Rh</a>
+              <a class="dropdown-item" href="#">ЭКГ</a>
+              <a class="dropdown-item" href="#">None</a>
+              <a class="dropdown-item" href="#">эффект от леч. 24 часа</a>
+              <a class="dropdown-item" href="#">антибак.проф.</a>
+              <a class="dropdown-item" href="#">антиферм.</a>
+              <a class="dropdown-item" href="#">антисекр.преп.</a>
+              <a class="dropdown-item" href="#">гемосорб.</a>
+              <a class="dropdown-item" href="#">СДК</a>
+              <a class="dropdown-item" href="#">нутр.подд-ка.</a>
+              <a class="dropdown-item" href="#">дрен.УЗ-контр</a>
+              <a class="dropdown-item" href="#">лап.(леч.)</a>
+              <a class="dropdown-item" href="#">ЭПСТ</a>
+              <a class="dropdown-item" href="#">ПКТ</a>
+              <a class="dropdown-item" href="#">ТИАБ(диагн)</a>
+              <a class="dropdown-item" href="#">миниинваз.оп.</a>
+              <a class="dropdown-item" href="#">лапаротомий-всего</a>
+              <a class="dropdown-item" href="#">Примечание</a>
+              <a class="dropdown-item" href="#">ОЦЕНКА</a>
+          </div>
+        </div>
+      </div>`
+      document.getElementById('form').appendChild(el)
+    })
+  </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
