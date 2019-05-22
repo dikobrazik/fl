@@ -98,10 +98,9 @@
       document.getElementById('form').insertBefore(el, document.getElementsByClassName('period')[0])
     })
     document.getElementById('addPeriod').addEventListener('click', ()=>{
-      if(periods.length==0) return
+      if(periods.length==index) return
       var el =  document.createElement('div')
       el.classList.add('col','rounded','border', 'border-dark', 'mb-3', 'p-0')
-      
       el.innerHTML = ` 
       <h3 class='text-center col font-weight-bold'>${periods[index]}</h3>
       <button type="button" class="btn btn-secondary addPeriodInfo col mb-3">Добавить показатель</button>      
