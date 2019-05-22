@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <title></title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script>
+      var periodTitle = '';
+    </script>
   <script src="js/scripts.js"></script>
   <style>
     .dropdown-menu{
@@ -14,9 +17,7 @@
       transform: translate3d(0px, 38px, 0px) !important;
     }
   </style>
-  <script>
-    
-  </script>
+  
 </head>
 <body>
   <div class="col-10 my-3">
@@ -40,15 +41,46 @@
           <input type="text" id="lastname" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-default">
         </div>
         <div class="input-group input-group-default mb-3 rounded">
+            <div class="input-group-prepend col-4 p-0">
+                <span class="input-group-text col">Дата рождения</span>
+              </div>
+            <input class="col p-1 rounded" type="date" id="dob">
+        </div>
+        <div class="input-group input-group-default mb-3">
+          <div class="input-group-prepend col-4 p-0">
+            <span class="input-group-text col">Пол</span>
+          </div>
+          <div class="form-check m-2">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+            <label class="form-check-label" for="exampleRadios1">
+              Женский
+            </label>
+          </div>
+          <div class="form-check m-2">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+            <label class="form-check-label" for="exampleRadios2">
+              Мужской
+            </label>
+          </div>        
+        </div>
+        <div class="input-group input-group-default mb-3 rounded">
+            <div class="input-group-prepend col-4 p-0">
+                <span class="input-group-text col">Дата госпитализации</span>
+              </div>
             <input class="col p-1 rounded" type="date" id="date">
         </div>
-        <div class='d-inline'>
+        <div class='row px-3'>
             <button type="button" id='add' class="btn btn-secondary col mb-3">Добавить показатель</button>
             <button type="button" id="save" class="btn btn-primary col mb-3">Сохранить</button>
+        </div>
+        <div class='period'>
+            <button type="button" id='addPeriod' class="btn btn-info col mb-3">Добавить период</button>
         </div>
     </div>
   </div>
   <script>
+    var periods = ['24 часа', '24-48 часов', '3 сутки','4-7 сутки','12-15 сутки','16-30 сутки','Выписка']
+    var index = 0;
     document.getElementById('save').addEventListener('click', ()=>{
       a = {}
       for(var element of document.getElementsByTagName('input')){
@@ -63,8 +95,27 @@
     document.getElementById('add').addEventListener('click', ()=>{
       var el =  document.createElement('div')
       el.innerHTML = generalInformation;
-      document.getElementById('form').appendChild(el)
+      document.getElementById('form').insertBefore(el, document.getElementsByClassName('period')[0])
     })
+    document.getElementById('addPeriod').addEventListener('click', ()=>{
+      if(periods.length==0) return
+      var el =  document.createElement('div')
+      el.classList.add('col','rounded','border', 'border-dark', 'mb-3', 'p-0')
+      
+      el.innerHTML = ` 
+      <h3 class='text-center col font-weight-bold'>${periods[index]}</h3>
+      <button type="button" class="btn btn-secondary addPeriodInfo col mb-3">Добавить показатель</button>      
+      `;
+      document.getElementById('form').appendChild(el)
+      document.getElementsByClassName('addPeriodInfo')[index].addEventListener('click', (e)=>{
+        var el =  document.createElement('div')
+        el.innerHTML = generalPeriodInformation;
+        e.toElement.parentElement.appendChild(el)
+      })
+      index++;
+    })
+    var lol;
+    
     var btnName = (e)=>{
       e.parentElement.parentElement.getElementsByTagName('button')[0].textContent = e.text
     }
