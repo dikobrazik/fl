@@ -57,7 +57,7 @@ function add(data){
 	});
 }
 
-var generalInformation = `<div class="input-group my-2 p-0">
+var generalInformation = `<div class="input-group mb-3 p-0">
 <div class="input-group-append col-4 p-0">
   <button class="btn btn-outline-secondary dropdown-toggle col" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Показатель</button>
   <div class="dropdown-menu col p-0" id="myDropdown">
