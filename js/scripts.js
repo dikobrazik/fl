@@ -59,9 +59,9 @@ function add(data){
 
 var generalInformation = `<div class="input-group mb-3 p-0">
 <div class="input-group-append col-4 p-0">
-  <button class="btn btn-outline-secondary dropdown-toggle col" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Показатель</button>
-  <div class="dropdown-menu col p-0" id="myDropdown">
-  <input type="text" id="searchInput" class="form-control p-2" onkeyup="filterFunction()" aria-label="Text input with dropdown button" placeholder="Search..">
+  <button class="btn btn-outline-secondary dropdown-toggle col rounded" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Показатель</button>
+  <div class="dropdown-menu col p-0 rounded" id="myDropdown">
+  <input type="text" id="searchInput" class="form-control p-2 searchInput rounded" onkeyup="filterFunction(this)" aria-label="Text input with dropdown button" placeholder="Search..">
     <a class="dropdown-item" onclick="btnName(this)">Дата госп-и</a>
     <a class="dropdown-item" onclick="btnName(this)">койко-день</a>
     <a class="dropdown-item" onclick="btnName(this)">возраст</a>
@@ -114,12 +114,82 @@ var generalInformation = `<div class="input-group mb-3 p-0">
 </div>
 <input type="text" class="form-control" aria-label="Text input with dropdown button">
 
-</div>`
-function filterFunction() {
-    var input, filter, ul, li, a, i;
-    input = document.getElementById("searchInput");
+</div>`;
+
+var generalPeriodInformation = 
+`
+<div class="input-group mb-3 p-0">
+<div class="input-group-append col-4 p-0">
+  <button class="btn btn-outline-secondary dropdown-toggle col rounded" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Показатель</button>
+  <div class="dropdown-menu col p-0 rounded" id="myDropdown">
+  <input type="text" id="searchInput" class="form-control p-2 searchInput rounded" onkeyup="filterFunction(this)" aria-label="Text input with dropdown button" placeholder="Search..">
+<a class="dropdown-item" onclick="btnName(this)">темп.тела</a>
+<a class="dropdown-item" onclick="btnName(this)">част.пульса</a>
+<a class="dropdown-item" onclick="btnName(this)">АДсист.</a>
+<a class="dropdown-item" onclick="btnName(this)">вазопресс.</a>
+<a class="dropdown-item" onclick="btnName(this)">част. дых.</a>
+<a class="dropdown-item" onclick="btnName(this)">сатурация</a>
+<a class="dropdown-item" onclick="btnName(this)">ИВЛ</a>
+<a class="dropdown-item" onclick="btnName(this)">диурез,мл</a>
+<a class="dropdown-item" onclick="btnName(this)">сознание</a>
+<a class="dropdown-item" onclick="btnName(this)">зонд,мл</a>
+<a class="dropdown-item" onclick="btnName(this)">вздутие ж.</a>
+<a class="dropdown-item" onclick="btnName(this)">ОЖО или св.ж.</a>
+<a class="dropdown-item" onclick="btnName(this)">ЦВД,мм вод.</a>
+<a class="dropdown-item" onclick="btnName(this)">лапарос.диагн.</a>
+<a class="dropdown-item" onclick="btnName(this)">ЭФГДС</a>
+<a class="dropdown-item" onclick="btnName(this)">УЗИ</a>
+<a class="dropdown-item" onclick="btnName(this)">КТ</a>
+<a class="dropdown-item" onclick="btnName(this)">посев крови</a>
+<a class="dropdown-item" onclick="btnName(this)">посев ОЖО</a>
+<a class="dropdown-item" onclick="btnName(this)">имм.статус</a>
+<a class="dropdown-item" onclick="btnName(this)">эритр.</a>
+<a class="dropdown-item" onclick="btnName(this)">Hb</a>
+<a class="dropdown-item" onclick="btnName(this)">Ht</a>
+<a class="dropdown-item" onclick="btnName(this)">СОЭ</a>
+<a class="dropdown-item" onclick="btnName(this)">лейк.</a>
+<a class="dropdown-item" onclick="btnName(this)">тромбоциты, кол-во</a>
+<a class="dropdown-item" onclick="btnName(this)">тромбоциты, объем</a>
+<a class="dropdown-item" onclick="btnName(this)">п/ядерн.</a>
+<a class="dropdown-item" onclick="btnName(this)">лимфоциты</a>
+<a class="dropdown-item" onclick="btnName(this)">нейтрофилы</a>
+<a class="dropdown-item" onclick="btnName(this)">ЛИИ</a>
+<a class="dropdown-item" onclick="btnName(this)">глюкоза</a>
+<a class="dropdown-item" onclick="btnName(this)">белок</a>
+<a class="dropdown-item" onclick="btnName(this)">АлАТ</a>
+<a class="dropdown-item" onclick="btnName(this)">АсАТ,</a>
+<a class="dropdown-item" onclick="btnName(this)">билир.</a>
+<a class="dropdown-item" onclick="btnName(this)">ЩФ</a>
+<a class="dropdown-item" onclick="btnName(this)">ГГТП</a>
+<a class="dropdown-item" onclick="btnName(this)">мочевина</a>
+<a class="dropdown-item" onclick="btnName(this)">креатинин</a>
+<a class="dropdown-item" onclick="btnName(this)">амилаза мочи</a>
+<a class="dropdown-item" onclick="btnName(this)">амилаза крови</a>
+<a class="dropdown-item" onclick="btnName(this)">кальций</a>
+<a class="dropdown-item" onclick="btnName(this)">ЛДГ</a>
+<a class="dropdown-item" onclick="btnName(this)">СРБ</a>
+<a class="dropdown-item" onclick="btnName(this)">рН</a>
+<a class="dropdown-item" onclick="btnName(this)">рСО2</a>
+<a class="dropdown-item" onclick="btnName(this)">рО2</a>
+<a class="dropdown-item" onclick="btnName(this)">НСО3</a>
+<a class="dropdown-item" onclick="btnName(this)">tCO2</a>
+<a class="dropdown-item" onclick="btnName(this)">ABE</a>
+<a class="dropdown-item" onclick="btnName(this)">SO2</a>
+<a class="dropdown-item" onclick="btnName(this)">АЧТВ</a>
+<a class="dropdown-item" onclick="btnName(this)">ПИ</a>
+<a class="dropdown-item" onclick="btnName(this)">МНО</a>
+<a class="dropdown-item" onclick="btnName(this)">PROMISE</a>
+</div>
+</div>
+<input type="text" class="form-control" aria-label="Text input with dropdown button">
+
+</div>`;
+function filterFunction(data) {
+    var input, filter, a, i;
+    input = data;
     filter = input.value.toUpperCase();
-    div = document.getElementById("myDropdown");
+    div = data.parentElement.parentElement.parentElement.parentElement;
+    
     a = div.getElementsByTagName("a");
     for (i = 0; i < a.length; i++) {
       txtValue = a[i].textContent || a[i].innerText;
