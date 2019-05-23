@@ -20,7 +20,15 @@
   
 </head>
 <body>
-  <div class="col-10 my-3">
+    <ul class="nav nav-tabs nav-fill col bg-gradient-secondary pt-2">
+        <li class="nav-item mx-1">
+          <a class="nav-link text-light bg-primary" href="info.html">Пациенты</a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link text-light bg-secondary" href="simple-expert-system-master/index.html">Правила</a>
+        </li>
+      </ul>
+  <div class="col my-3">
     <div id="form">
         <div class="input-group input-group-default mb-3">
           <div class="input-group-prepend col-4 p-0">
@@ -51,13 +59,13 @@
             <span class="input-group-text col">Пол</span>
           </div>
           <div class="form-check m-2">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+            <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" value="female">
             <label class="form-check-label" for="exampleRadios1">
               Женский
             </label>
           </div>
           <div class="form-check m-2">
-            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+            <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" value="male">
             <label class="form-check-label" for="exampleRadios2">
               Мужской
             </label>
@@ -71,10 +79,10 @@
         </div>
         <div class='row px-3'>
             <button type="button" id='add' class="btn btn-secondary col mb-3">Добавить показатель</button>
-            <button type="button" id="save" class="btn btn-primary col mb-3">Сохранить</button>
         </div>
         <div class='period'>
             <button type="button" id='addPeriod' class="btn btn-info col mb-3">Добавить период</button>
+            <button type="button" id="save" class="btn btn-primary col mb-3">Сохранить</button>
         </div>
     </div>
   </div>
@@ -83,33 +91,38 @@
     var index = 0;
     document.getElementById('save').addEventListener('click', ()=>{
       a = {}
+      rad1 = document.querySelector('#exampleRadios1')
+      rad2 = document.querySelector('#exampleRadios2')
       for(var element of document.getElementsByTagName('input')){
-        if(element.value == '') {
+        if(element.value == '' || (!rad1.checked && !rad2.checked)) {
           var isRly = confirm('Не все поля заполнены. Хотите продолжить?')
-          if(!isRly) break;
+          if(!isRly) return;
         }
-        a[element.id] = element.value
+        if(element.getAttribute('name') != 'gender') a[element.id] = element.value
+        else if(element.checked) a['gender'] = element.value
+        
       }
       this.add(a)
     })
-    document.getElementById('add').addEventListener('click', ()=>{
+    document.getElementById('add').addEventListener('click', (e)=>{
       var el =  document.createElement('div')
       el.innerHTML = generalInformation;
-      document.getElementById('form').insertBefore(el, document.getElementsByClassName('period')[0])
+      document.getElementById('form').insertBefore(el, e.toElement.parentElement)
     })
+    var lol;
     document.getElementById('addPeriod').addEventListener('click', ()=>{
       if(periods.length==index) return
       var el =  document.createElement('div')
-      el.classList.add('col','rounded','border', 'border-dark', 'mb-3', 'p-0')
+      el.classList.add('col','rounded','border', 'border-dark', 'mb-3', 'p-0', 'period-block')
       el.innerHTML = ` 
-      <h3 class='text-center col font-weight-bold'>${periods[index]}</h3>
-      <button type="button" class="btn btn-secondary addPeriodInfo col mb-3">Добавить показатель</button>      
+      <h3 class='text-center col font-weight-bold bg-info'>${periods[index]}</h3>
+      <button type="button" class="btn btn-secondary addPeriodInfo col">Добавить показатель</button>      
       `;
-      document.getElementById('form').appendChild(el)
+      document.getElementById('form').insertBefore(el, document.getElementById('addPeriod').parentNode)
       document.getElementsByClassName('addPeriodInfo')[index].addEventListener('click', (e)=>{
         var el =  document.createElement('div')
         el.innerHTML = generalPeriodInformation;
-        e.toElement.parentElement.appendChild(el)
+        e.toElement.parentElement.insertBefore(el,e.toElement)
       })
       index++;
     })

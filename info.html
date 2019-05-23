@@ -10,13 +10,24 @@
         <script src="js/scripts.js"></script>
     </head>
     <body>
-            <table class="table table-dark">
+            <ul class="nav nav-tabs nav-fill col bg-gradient-secondary pt-2">
+                    <li class="nav-item mx-1">
+                      <a class="nav-link text-light bg-primary" href="info.html">Пациенты</a>
+                    </li>
+                    <li class="nav-item mx-1">
+                      <a class="nav-link text-light bg-secondary" href="simple-expert-system-master/index.html">Правила</a>
+                    </li>
+                  </ul>
+            <table class="table table-light">
                 <thead>
                     <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Date</th>
+                        <th scope="col">#</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Фамилия</th>
+                        <th scope="col">Отчество</th>
+                        <th scope="col">Дата рождения</th>
+                        <th scope="col">Пол</th>
+                        <th scope="col">Дата госпитализации</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,7 +44,10 @@
                         `<tr>
                             <th scope="row">${i+1}</th>
                             <td>${e[i].name}</td>
+                            <td>${e[i].surname}</td>
                             <td>${e[i].lastname}</td>
+                            <td>${e[i].dob}</td>
+                            <td>${e[i].gender}</td>
                             <td>${e[i].date}</td>
                         </tr>`
                     }
