@@ -89,6 +89,9 @@
   <script>
     var periods = ['24 часа', '24-48 часов', '3 сутки','4-7 сутки','12-15 сутки','16-30 сутки','Выписка']
     var index = 0;
+    if(window.location.search.substr(1) != ''){
+      
+    }
     document.getElementById('save').addEventListener('click', ()=>{
       a = {}
       rad1 = document.querySelector('#exampleRadios1')

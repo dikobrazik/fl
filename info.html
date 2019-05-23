@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
         <style>
         </style>
         <script src="js/scripts.js"></script>
@@ -18,7 +18,7 @@
                       <a class="nav-link text-light bg-secondary" href="simple-expert-system-master/index.html">Правила</a>
                     </li>
                   </ul>
-            <table class="table table-light">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -28,12 +28,13 @@
                         <th scope="col">Дата рождения</th>
                         <th scope="col">Пол</th>
                         <th scope="col">Дата госпитализации</th>
+                        <th scope="col"> </th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
-            <a href='data.html' id="add" class="btn btn-success">Добавить</a>
+            <a href='data.html' class="btn btn-success col">Добавить</a>
         <script>
             var data = [];
             document.addEventListener('DOMContentLoaded', function(){
@@ -42,21 +43,31 @@
                     for(var i = 0; i < e.length; i++){
                         document.querySelector('body > table > tbody').innerHTML +=  
                         `<tr>
-                            <th scope="row">${i+1}</th>
-                            <td>${e[i].name}</td>
-                            <td>${e[i].surname}</td>
-                            <td>${e[i].lastname}</td>
-                            <td>${e[i].dob}</td>
-                            <td>${e[i].gender}</td>
-                            <td>${e[i].date}</td>
+                            <th class='align-middle' scope="row">${i+1}</th>
+                            <td class='align-middle'>${e[i].name}</td>
+                            <td class='align-middle'>${e[i].surname}</td>
+                            <td class='align-middle'>${e[i].lastname}</td>
+                            <td class='align-middle'>${e[i].dob}</td>
+                            <td class='align-middle'>${e[i].gender}</td>
+                            <td class='align-middle'>${e[i].date}</td>
+                            <td class='align-middle'>
+                                <a onclick="edit(this)" class='btn btn-danger'><i class="fas fa-edit" style="font-size: 1.5em;color: #fff;"></i></a>
+                                <a onclick="analysis(this)" class='btn btn-warning'><i class="fas fa-search" style="font-size: 1.5em;col#r: #fff;"></i></a>
+                            </td>
                         </tr>`
                     }
                 }
                 list(a)
             })
-            document.getElementById('add').addEventListener('click',()=>{
 
-            })
+            var edit = function(e){
+                var pac;
+                document.getElementsByTagName('tbody')[0].childNodes.forEach((el,i) => {if(el==e.parentElement.parentElement) pac = data[i-1]})
+                window.open(window.location.href.split('/i')[0]+'/data.html?id=' + pac.id)
+            }
+            var analysis = function(e){
+                
+            }
         </script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
