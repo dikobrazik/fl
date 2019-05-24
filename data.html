@@ -34,38 +34,38 @@
           <div class="input-group-prepend col-4 p-0">
             <span class="input-group-text col ">Фамилия</span>
           </div>
-          <input type="text" id="surname" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-default">
+          <input type="text" id="surname" class="form-control data-field" aria-label="Small" aria-describedby="inputGroup-sizing-default">
         </div>
         <div class="input-group input-group-default mb-3">
           <div class="input-group-prepend col-4 p-0">
             <span class="input-group-text col">Имя</span>
           </div>
-          <input type="text" id="name" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-default">
+          <input type="text" id="name" class="form-control data-field" aria-label="Small" aria-describedby="inputGroup-sizing-default">
         </div>
         <div class="input-group input-group-default mb-3">
           <div class="input-group-prepend col-4 p-0">
             <span class="input-group-text col">Отчество</span>
           </div>
-          <input type="text" id="lastname" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-default">
+          <input type="text" id="lastname" class="form-control data-field" aria-label="Small" aria-describedby="inputGroup-sizing-default">
         </div>
         <div class="input-group input-group-default mb-3 rounded">
             <div class="input-group-prepend col-4 p-0">
                 <span class="input-group-text col">Дата рождения</span>
               </div>
-            <input class="col p-1 rounded" type="date" id="dob">
+            <input class="col p-1 rounded data-field" type="date" id="dob">
         </div>
         <div class="input-group input-group-default mb-3">
           <div class="input-group-prepend col-4 p-0">
             <span class="input-group-text col">Пол</span>
           </div>
           <div class="form-check m-2">
-            <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" value="female">
+            <input class="form-check-input data-field" type="radio" name="gender" id="exampleRadios1" value="female">
             <label class="form-check-label" for="exampleRadios1">
               Женский
             </label>
           </div>
           <div class="form-check m-2">
-            <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" value="male">
+            <input class="form-check-input data-field" type="radio" name="gender" id="exampleRadios2" value="male">
             <label class="form-check-label" for="exampleRadios2">
               Мужской
             </label>
@@ -75,7 +75,7 @@
             <div class="input-group-prepend col-4 p-0">
                 <span class="input-group-text col">Дата госпитализации</span>
               </div>
-            <input class="col p-1 rounded" type="date" id="date">
+            <input class="col p-1 rounded data-field" type="date" id="date">
         </div>
         <div class='row px-3'>
             <button type="button" id='add' class="btn btn-secondary col mb-3">Добавить показатель</button>
@@ -87,52 +87,106 @@
     </div>
   </div>
   <script>
-    var periods = ['24 часа', '24-48 часов', '3 сутки','4-7 сутки','12-15 сутки','16-30 сутки','Выписка']
+    var periods = ['24 часа', '24-48 часов', '3 сутки','4-7 сутки','12-15 сутки','16-30 сутки','Выписка'] 
     var index = 0;
+    var id;
     if(window.location.search.substr(1) != ''){
-      
+      id = window.location.search.substr(1).split('=')[1];
+      get(id)
     }
-    document.getElementById('save').addEventListener('click', ()=>{
-      a = {}
-      rad1 = document.querySelector('#exampleRadios1')
-      rad2 = document.querySelector('#exampleRadios2')
-      for(var element of document.getElementsByTagName('input')){
-        if(element.value == '' || (!rad1.checked && !rad2.checked)) {
-          var isRly = confirm('Не все поля заполнены. Хотите продолжить?')
-          if(!isRly) return;
-        }
-        if(element.getAttribute('name') != 'gender') a[element.id] = element.value
-        else if(element.checked) a['gender'] = element.value
-        
-      }
-      this.add(a)
-    })
-    document.getElementById('add').addEventListener('click', (e)=>{
-      var el =  document.createElement('div')
-      el.innerHTML = generalInformation;
-      document.getElementById('form').insertBefore(el, e.toElement.parentElement)
-    })
-    var lol;
-    document.getElementById('addPeriod').addEventListener('click', ()=>{
-      if(periods.length==index) return
-      var el =  document.createElement('div')
-      el.classList.add('col','rounded','border', 'border-dark', 'mb-3', 'p-0', 'period-block')
-      el.innerHTML = ` 
-      <h3 class='text-center col font-weight-bold bg-info'>${periods[index]}</h3>
-      <button type="button" class="btn btn-secondary addPeriodInfo col">Добавить показатель</button>      
-      `;
-      document.getElementById('form').insertBefore(el, document.getElementById('addPeriod').parentNode)
-      document.getElementsByClassName('addPeriodInfo')[index].addEventListener('click', (e)=>{
+    var addPeriodInfo = function(e){
         var el =  document.createElement('div')
         el.innerHTML = generalPeriodInformation;
-        e.toElement.parentElement.insertBefore(el,e.toElement)
-      })
-      index++;
+        e.parentElement.insertBefore(el,e)
+        return el;
+    }
+    var fillAllFields = function(a){
+        for(var f in a){
+            if(f=='id') continue;
+            if(document.getElementById(f)!=undefined) document.getElementById(f).value = a[f]
+            else if(f == 'gender'){
+                if(document.querySelector('[value='+a[f]+']') != undefined){
+                    document.querySelector('[value='+a[f]+']').checked = true
+                }
+            }else{
+                if(f.indexOf('p')!=-1){
+                    var period = addPeriod();
+                    var fields = a[f];
+                    for(var n in fields){
+                        var info = addPeriodInfo(period.lastElementChild)
+                        info.getElementsByTagName('button')[0].textContent = periodInformationArray[Number(n)]
+                        info.querySelector('.added-data-field').value = fields[n]
+                    }
+                }else{
+                    var el =  document.createElement('div')
+                    el.innerHTML = generalInformation;
+                    el.querySelector('.added-data-field').value = a[f]
+                    el.getElementsByTagName('button')[0].textContent = generalInformationArray[Number(f)]
+                    document.getElementById('form').insertBefore(el, document.getElementById('add').parentElement)
+                }
+            }
+        }
+    }
+    document.getElementById('save').addEventListener('click', ()=>{
+        a = {}
+        rad1 = document.querySelector('#exampleRadios1')
+        rad2 = document.querySelector('#exampleRadios2')
+        for(var element of document.querySelectorAll('.data-field,.added-data-field')){
+            if(hasSomeParentTheClass(element, 'period-block')) continue;
+            if(element.value == '' || (element.getAttribute('name') == 'gender' && !rad1.checked && !rad2.checked)) {
+                var isRly = confirm('Не все поля заполнены. Хотите продолжить?')
+                if(!isRly) return;
+            }
+            if(element.getAttribute('name') != 'gender') a[element.id] = element.value
+            else if(element.checked) a['gender'] = element.value
+        }
+        for(var block of document.getElementsByClassName('period-block')){
+            var blockIndex;
+            Array.from(document.getElementsByClassName('period-block')).forEach((el,i) => {if(el==block) {blockIndex = i}})        
+            b = {};
+            for(var element of block.querySelectorAll('.added-data-field')){
+                if(element.value == '') {
+                    var isRly = confirm('Не все поля заполнены. Хотите продолжить?')
+                    if(!isRly) return;
+                }
+                b[element.id] = element.value
+            }
+            a['p'+blockIndex] = b;
+        }
+        if(id != undefined) a.id = Number(id);
+        this.add(a)
+    })
+    document.getElementById('add').addEventListener('click', (e)=>{
+        var el =  document.createElement('div')
+        el.innerHTML = generalInformation;
+        document.getElementById('form').insertBefore(el, e.toElement.parentElement)
     })
     var lol;
     
+    var addPeriod = function(e){
+        if(periods.length==index) return
+        var el =  document.createElement('div')
+        el.classList.add('col','rounded','border', 'border-dark', 'mb-3', 'p-1', 'period-block')
+        el.style = 'border:3px solid #17a2b8 !important';
+        el.innerHTML = ` 
+            <h3 class='text-center col font-weight-bold bg-info'>${periods[index]}</h3>
+            <button type="button" class="btn btn-secondary addPeriodInfo col">Добавить показатель</button>      
+            `;
+        document.getElementById('form').insertBefore(el, document.getElementById('addPeriod').parentNode)
+        document.getElementsByClassName('addPeriodInfo')[index].addEventListener('click', (e)=>{addPeriodInfo(e.toElement)})
+        index++;
+        return el;
+    };
+    document.getElementById('addPeriod').addEventListener('click', addPeriod)
     var btnName = (e)=>{
-      e.parentElement.parentElement.getElementsByTagName('button')[0].textContent = e.text
+        if(hasSomeParentTheClass(e, 'period-block')) e.parentElement.parentElement.parentElement.getElementsByClassName('added-data-field')[0].id = periodInformationArray.indexOf(e.text)
+        else e.parentElement.parentElement.parentElement.getElementsByClassName('added-data-field')[0].id = generalInformationArray.indexOf(e.text)
+        e.parentElement.parentElement.getElementsByTagName('button')[0].textContent = e.text
+    }
+    function hasSomeParentTheClass(element, classname) {
+        if(element.id == 'form') return false;
+        if (element.classList.contains(classname)) return true;
+        return element.parentNode && hasSomeParentTheClass(element.parentNode, classname);
     }
   </script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
