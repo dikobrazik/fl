@@ -28,17 +28,6 @@ function get(id){
       request.onsuccess = function(event) {
         fillAllFields(event.currentTarget.result)
       };
-      // var objectStore = db.transaction(storeName).objectStore(storeName);
-      // objectStore.openCursor().onsuccess = function(event) {
-      //   var cursor = event.target.result;
-      //   if (cursor) {
-      //     if(cursor.key == id) return fillAllFields(cursor.value);
-      //     cursor.continue();
-      //   }
-      //   else {
-      //     alert("Not found!");
-      //   }
-      // };
     })
 }
 function remove(id){

@@ -23,11 +23,11 @@ function loadItemsFromLocalStorage()
         return;
     }
     var template = '<div class="b-page-test-switch__item b-page border-radius" index="{1}">{0}</div>';
-    var target = $(".b-page-test-switch");
+    var target = document.getElementsByClassName('b-page-test-switch')[0];
 
     for (var i = 0; localStorage["ExpertSys" + i]; i++)
     {
-        target.html(target.html() + template.replace("{1}","ExpertSys" + i).replace("{0}",JSON.parse(localStorage["ExpertSys" + i]).title));
+        target.innerHTML += template.replace("{1}","ExpertSys" + i).replace("{0}",JSON.parse(localStorage["ExpertSys" + i]).title);
 
     }
 }
@@ -112,8 +112,7 @@ function init()
      * Enter == кнопки далее при вводе вероятности
      */
     document.getElementById('current-answer').addEventListener('keydown', (e)=>{if (e.keyCode == 13) step()})
-    document.getElementById('complete-answer').addEventListener('click keypress', step)
-    // $("#complete-answer").bind("click keypress", step);
+    document.getElementById('complete-answer').addEventListener('click', step);
 
     /**
      * визуализация выбора теста
@@ -121,27 +120,15 @@ function init()
     document.getElementsByClassName('b-page-test-switch__item')[0].addEventListener('click',(e)=>{
         lol = e;
         if(e.toElement.classList.contains('b-page-test-switch__selected')){
-            document.getElementsByClassName('b-page-test-switch__item')[0].remove('b-page-test-switch__selected')
+            document.getElementsByClassName('b-page-test-switch__item')[0].classList.remove('b-page-test-switch__selected')
             return;
         }
-        document.getElementsByClassName('b-page-test-switch__selected').classList.remove('b-page-test-switch__selected')
+        if(document.getElementsByClassName('b-page-test-switch__selected').length!=0)document.getElementsByClassName('b-page-test-switch__selected').classList.remove('b-page-test-switch__selected')
         e.toElement.classList.add('b-page-test-switch__selected')
     })
-    $(".b-page-test-switch__item").on("click keypress", function()
-    {
-        if ($(this).hasClass("b-page-test-switch__selected"))
-        {
-            $(this).removeClass("b-page-test-switch__selected");
-            return;
-        }
-        $(".b-page-test-switch__selected").removeClass("b-page-test-switch__selected");
-        $(this).addClass("b-page-test-switch__selected");
-    });
-
-    $("#data-format").bind("click keypress",function()
-    {
-        $("#test").val(
-            "Формат вводимых данных:\n" +
+    document.getElementById('data-format').addEventListener('click', ()=>{
+        document.getElementById('test').value = 
+        "Формат вводимых данных:\n" +
                 "На первой строке располагается название базы знаний\n" +
                 "Затем через знак перевода строки - список вопросов\n" +
                 "После вопросов - следует список событий (вариантов) в формате:\n"+
@@ -156,10 +143,8 @@ function init()
                 "0.5 1) 1 0 2) 0 1\n" +
                 "Девочка\n"+
                 "0.5 2) 1 0 1) 0 1\n" +
-                "Заметьте, номера вопросов можно устанавливать не по порядку + вопросы не влияющие на вероятность события можно опускать");
-
-
-    })  ;
+                "Заметьте, номера вопросов можно устанавливать не по порядку + вопросы не влияющие на вероятность события можно опускать"
+    })
 }
 
 window.onload = init;
@@ -266,12 +251,13 @@ Test.prototype.nextStep = function()
     this.questions.sort(sortQuestion);
     if (this.questions.length == 0 || this.complete)
     {
-        $("#current-question").html("Ознакомьтесь с решением системы. Вопросы закончены.");
-        $("#complete-answer").add("#current-answer").addClass("hide");
+        document.getElementById('current-question').innerHTML = "Ознакомьтесь с решением системы. Вопросы закончены."
+        document.getElementById('complete-answer').appendChild(document.getElementById('current-answer'))
+        document.getElementById('current-answer').classList.add('hide')
         return;
     }
-    $("#current-question").html(this.questions[0].q);
-    $("#current-answer").attr("value",'');
+    document.getElementById('current-question').innerHTML = this.questions[0].q;
+    document.getElementById('complete-answer').value = ''
 };
 
 /**
