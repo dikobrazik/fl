@@ -19,7 +19,6 @@ function connectDB(f){
 /**
  * 
  * @param {number} id - id пациента в бд
- * @return {Object} - возвращает данные о пациенте 
  */
 function get(id){
     connectDB(function(db){
@@ -69,7 +68,7 @@ function add(data){
     connectDB(function(db){
     var request = db.transaction([storeName], "readwrite").objectStore(storeName).put(data);
 		request.onsuccess = function(){
-			return request.result;
+			id = request.result;
 		}
 	});
 }

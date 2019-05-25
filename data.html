@@ -133,10 +133,6 @@
         rad2 = document.querySelector('#exampleRadios2')
         for(var element of document.querySelectorAll('.data-field,.added-data-field')){
             if(hasSomeParentTheClass(element, 'period-block')) continue;
-            if(element.value == '' || (element.getAttribute('name') == 'gender' && !rad1.checked && !rad2.checked)) {
-                var isRly = confirm('Не все поля заполнены. Хотите продолжить?')
-                if(!isRly) return;
-            }
             if(element.getAttribute('name') != 'gender') a[element.id] = element.value
             else if(element.checked) a['gender'] = element.value
         }
@@ -145,16 +141,12 @@
             Array.from(document.getElementsByClassName('period-block')).forEach((el,i) => {if(el==block) {blockIndex = i}})        
             b = {};
             for(var element of block.querySelectorAll('.added-data-field')){
-                if(element.value == '') {
-                    var isRly = confirm('Не все поля заполнены. Хотите продолжить?')
-                    if(!isRly) return;
-                }
                 b[element.id] = element.value
             }
             a['p'+blockIndex] = b;
         }
         if(id != undefined) a.id = Number(id);
-        this.add(a)
+        add(a)
     })
     document.getElementById('add').addEventListener('click', (e)=>{
         var el =  document.createElement('div')
