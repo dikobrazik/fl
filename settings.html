@@ -51,6 +51,7 @@
     var periods = ['Общий','24 часа', '24-48 часов', '3 сутки','4-7 сутки','12-15 сутки','16-30 сутки','Выписка'] 
     var index = 0;
     var id, data;
+    
     document.getElementById('add').addEventListener('click',(e)=>{
         var name = prompt("Пожалуйста, введите название диагностики", "");
         while(name=='' && name != null){
@@ -60,9 +61,9 @@
             toggleStore();
             add({'name':name})
             toggleStore();
+            document.location.hash = 'last'
             document.location.reload(true);
         }
-      
     })
     function setParam(e){
       p = null;
@@ -143,6 +144,9 @@
                 document.querySelector('div.col').style.opacity = Number(document.querySelector('div.col').style.opacity)+progress;
             }
         });
+        if(document.location.hash!=''){
+            document.querySelector('body > div > div:nth-child('+document.getElementsByClassName("settings-block").length+')').scrollIntoView();
+        }
     }
     function changeTitle(e){
         Array.from(document.querySelectorAll('h3')).forEach((v,i)=>{
@@ -164,7 +168,8 @@
         toggleStore();
         document.querySelectorAll('a.btn.btn-danger').forEach((el, i)=>{if(e==el) remove(Number(data[i].id));})
         toggleStore();
-        document.location.reload(true);        
+        document.location.hash = ''
+        document.location.reload(true);       
     }
     function getTextWidth(text){
         var test = document.getElementById("test");
