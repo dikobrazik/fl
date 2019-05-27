@@ -1,3 +1,3 @@
 # fl
 
-url: https://dikobrazik.github.io/fl/index.html
+url: https://dikobrazik.github.io/fl/info.html
