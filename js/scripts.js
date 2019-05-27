@@ -1,6 +1,7 @@
 var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 var IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction; 
 var db, storeName = 'database';
+var toggleStore = () => storeName = storeName=='database'?'settings':'database';
 function connectDB(f){
     var request = indexedDB.open(storeName, 1);
     request.onerror = function(err){
@@ -19,13 +20,14 @@ function connectDB(f){
 /**
  * 
  * @param {number} id - id пациента в бд
+ * @param {function} func - функция в которую передается поле с id
  */
-function get(id){
+function get(id, func){
     connectDB(function(db){
       var request = db.transaction([storeName], "readwrite")
                   .objectStore(storeName).get(Number(id));
       request.onsuccess = function(event) {
-        fillAllFields(event.currentTarget.result)
+        func(event.currentTarget.result)
       };
     })
 }
@@ -34,8 +36,8 @@ function remove(id){
     var request = db.transaction([storeName], "readwrite")
                   .objectStore(storeName).delete(id);
     request.onsuccess = function(event) {
-      if(event.type == 'success') alert('Успешно')
-      else alert('Возникла проблема...')
+      // if(event.type == 'success') alert('Успешно')
+      // else alert('Возникла проблема...')
     };
     request.onerror = function(event) {
       alert(event)
@@ -72,13 +74,65 @@ function add(data){
 		}
 	});
 }
+var generalInformationArray = ['Дата госп-и', 'койко-день', 'возраст', 'пол', 'Диагноз ЛОП/СОП/ТОП', 'диагноз ОП/ИПН/СПН/ХП', 'осложнения', 'Вид операции', 'сопутств.заб.', 'этиология', 'исход', 'Ranson', 'ССВР', 'None', 'М-APACHE II', 'к/день в ОАРИТ', '№сутки в ОАРИТ', 'нач.заб.,час', 'тип госпитализации', 'Сутки перевода', '№ госп-и', 'ранн.опер.', 'расп.боли', 'нарк.анальг.', 'мн.рвота', 'рв.коф.гущ.', 'BMI', 'c-м Грея-К.', 'Группа крови', 'Rh', 'ЭКГ', 'None', 'эффект от леч. 24 часа', 'антибак.проф.', 'антиферм.', 'антисекр.преп.', 'гемосорб.', 'СДК', 'нутр.подд-ка.', 'дрен.УЗ-контр', 'лап.(леч.)', 'ЭПСТ', 'ПКТ', 'ТИАБ(диагн)', 'миниинваз.оп.', 'лапаротомий-всего', 'Примечание', 'ОЦЕНКА',]
+var periodInformationArray = ['темп.тела', 'част.пульса', 'АДсист.', 'вазопресс.', 'част. дых.', 'сатурация', 'ИВЛ', 'диурез,мл', 'сознание', 'зонд,мл', 'вздутие ж.', 'ОЖО или св.ж.', 'ЦВД,мм вод.', 'лапарос.диагн.', 'ЭФГДС', 'УЗИ', 'КТ', 'посев крови', 'посев ОЖО', 'имм.статус', 'эритр.', 'Hb', 'Ht', 'СОЭ', 'лейк.', 'тромбоциты, кол-во', 'тромбоциты, объем', 'п/ядерн.', 'лимфоциты', 'нейтрофилы', 'ЛИИ', 'глюкоза', 'белок', 'АлАТ', 'АсАТ,', 'билир.', 'ЩФ', 'ГГТП', 'мочевина', 'креатинин', 'амилаза мочи', 'амилаза крови', 'кальций', 'ЛДГ', 'СРБ', 'рН', 'рСО2', 'рО2', 'НСО3', 'tCO2', 'ABE', 'SO2', 'АЧТВ', 'ПИ', 'МНО', 'PROMISE',]
 
 var generalInformation = `<div class="input-group mb-3 p-0">
 <div class="input-group-append col-4 p-0">
   <button class="btn btn-outline-secondary dropdown-toggle col rounded" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Показатель</button>
   <div class="dropdown-menu col p-0 rounded" id="myDropdown">
   <input type="text" id="searchInput" class="form-control p-2 searchInput rounded" onkeyup="filterFunction(this)" aria-label="Text input with dropdown button" placeholder="Search..">
-    <a class="dropdown-item" onclick="btnName(this)">койко-день</a>
+  ${generalInformationArray.map(v=>'<a class="dropdown-item" onclick="btnName(this)">'+v+'</a>').join('')}
+  
+  </div>
+</div>
+<input type="text" class="form-control added-data-field" aria-label="Text input with dropdown button">
+</div>`;
+var periodInformationArray = ['темп.тела', 'част.пульса', 'АДсист.', 'вазопресс.', 'част. дых.', 'сатурация', 'ИВЛ', 'диурез,мл', 'сознание', 'зонд,мл', 'вздутие ж.', 'ОЖО или св.ж.', 'ЦВД,мм вод.', 'лапарос.диагн.', 'ЭФГДС', 'УЗИ', 'КТ', 'посев крови', 'посев ОЖО', 'имм.статус', 'эритр.', 'Hb', 'Ht', 'СОЭ', 'лейк.', 'тромбоциты, кол-во', 'тромбоциты, объем', 'п/ядерн.', 'лимфоциты', 'нейтрофилы', 'ЛИИ', 'глюкоза', 'белок', 'АлАТ', 'АсАТ,', 'билир.', 'ЩФ', 'ГГТП', 'мочевина', 'креатинин', 'амилаза мочи', 'амилаза крови', 'кальций', 'ЛДГ', 'СРБ', 'рН', 'рСО2', 'рО2', 'НСО3', 'tCO2', 'ABE', 'SO2', 'АЧТВ', 'ПИ', 'МНО', 'PROMISE',]
+
+var generalPeriodInformation = 
+`
+<div class="input-group mb-3 p-0">
+<div class="input-group-append col-4 p-0">
+  <button class="btn btn-outline-secondary dropdown-toggle col rounded" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Показатель</button>
+  <div class="dropdown-menu col p-0 rounded" id="myDropdown">
+  <input type="text" id="searchInput" class="form-control p-2 searchInput rounded" onkeyup="filterFunction(this)" aria-label="Text input with dropdown button" placeholder="Search..">
+${periodInformationArray.map(v=>'<a class="dropdown-item" onclick="btnName(this)">'+v+'</a>').join('')}
+</div>
+</div>
+<input type="text" class="form-control added-data-field" aria-label="Text input with dropdown button">
+</div>`;
+function filterFunction(data) {
+    var input, filter, a, i;
+    input = data;
+    filter = input.value.toUpperCase();
+    div = data.parentElement.parentElement.parentElement.parentElement;
+    
+    a = div.getElementsByTagName("a");
+    for (i = 0; i < a.length; i++) {
+      txtValue = a[i].textContent || a[i].innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        a[i].style.display = "";
+      } else {
+        a[i].style.display = "none";
+      }
+    }
+  }
+
+function animate(options) {
+  var start = performance.now();
+  requestAnimationFrame(function animate(time) {
+      var timeFraction = (time - start) / options.duration;
+      if (timeFraction > 1) timeFraction = 1;
+      var progress = options.timing(timeFraction)
+      options.draw(progress);
+      if (timeFraction < 1) {
+          requestAnimationFrame(animate);
+      }
+  });
+}
+/*
+<a class="dropdown-item" onclick="btnName(this)">койко-день</a>
     <a class="dropdown-item" onclick="btnName(this)">Диагноз ЛОП/СОП/ТОП</a>
     <a class="dropdown-item" onclick="btnName(this)">диагноз ОП/ИПН/СПН/ХП</a>
     <a class="dropdown-item" onclick="btnName(this)">осложнения</a>
@@ -123,19 +177,10 @@ var generalInformation = `<div class="input-group mb-3 p-0">
     <a class="dropdown-item" onclick="btnName(this)">лапаротомий-всего</a>
     <a class="dropdown-item" onclick="btnName(this)">Примечание</a>
     <a class="dropdown-item" onclick="btnName(this)">ОЦЕНКА</a>
-  </div>
-</div>
-<input type="text" class="form-control added-data-field" aria-label="Text input with dropdown button">
+ */
 
-</div>`;
 
-var generalPeriodInformation = 
-`
-<div class="input-group mb-3 p-0">
-<div class="input-group-append col-4 p-0">
-  <button class="btn btn-outline-secondary dropdown-toggle col rounded" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Показатель</button>
-  <div class="dropdown-menu col p-0 rounded" id="myDropdown">
-  <input type="text" id="searchInput" class="form-control p-2 searchInput rounded" onkeyup="filterFunction(this)" aria-label="Text input with dropdown button" placeholder="Search..">
+/*
 <a class="dropdown-item" onclick="btnName(this)">темп.тела</a>
 <a class="dropdown-item" onclick="btnName(this)">част.пульса</a>
 <a class="dropdown-item" onclick="btnName(this)">АДсист.</a>
@@ -192,42 +237,4 @@ var generalPeriodInformation =
 <a class="dropdown-item" onclick="btnName(this)">ПИ</a>
 <a class="dropdown-item" onclick="btnName(this)">МНО</a>
 <a class="dropdown-item" onclick="btnName(this)">PROMISE</a>
-</div>
-</div>
-<input type="text" class="form-control added-data-field" aria-label="Text input with dropdown button">
-
-</div>`;
-function filterFunction(data) {
-    var input, filter, a, i;
-    input = data;
-    filter = input.value.toUpperCase();
-    div = data.parentElement.parentElement.parentElement.parentElement;
-    
-    a = div.getElementsByTagName("a");
-    for (i = 0; i < a.length; i++) {
-      txtValue = a[i].textContent || a[i].innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        a[i].style.display = "";
-      } else {
-        a[i].style.display = "none";
-      }
-    }
-  }
-var generalInformationArray = ['Дата госп-и', 'койко-день', 'возраст', 'пол', 'Диагноз ЛОП/СОП/ТОП', 'диагноз ОП/ИПН/СПН/ХП', 'осложнения', 'Вид операции', 'сопутств.заб.', 'этиология', 'исход', 'Ranson', 'ССВР', 'None', 'М-APACHE II', 'к/день в ОАРИТ', '№сутки в ОАРИТ', 'нач.заб.,час', 'тип госпитализации', 'Сутки перевода', '№ госп-и', 'ранн.опер.', 'расп.боли', 'нарк.анальг.', 'мн.рвота', 'рв.коф.гущ.', 'BMI', 'c-м Грея-К.', 'Группа крови', 'Rh', 'ЭКГ', 'None', 'эффект от леч. 24 часа', 'антибак.проф.', 'антиферм.', 'антисекр.преп.', 'гемосорб.', 'СДК', 'нутр.подд-ка.', 'дрен.УЗ-контр', 'лап.(леч.)', 'ЭПСТ', 'ПКТ', 'ТИАБ(диагн)', 'миниинваз.оп.', 'лапаротомий-всего', 'Примечание', 'ОЦЕНКА',]
-var periodInformationArray = ['темп.тела', 'част.пульса', 'АДсист.', 'вазопресс.', 'част. дых.', 'сатурация', 'ИВЛ', 'диурез,мл', 'сознание', 'зонд,мл', 'вздутие ж.', 'ОЖО или св.ж.', 'ЦВД,мм вод.', 'лапарос.диагн.', 'ЭФГДС', 'УЗИ', 'КТ', 'посев крови', 'посев ОЖО', 'имм.статус', 'эритр.', 'Hb', 'Ht', 'СОЭ', 'лейк.', 'тромбоциты, кол-во', 'тромбоциты, объем', 'п/ядерн.', 'лимфоциты', 'нейтрофилы', 'ЛИИ', 'глюкоза', 'белок', 'АлАТ', 'АсАТ,', 'билир.', 'ЩФ', 'ГГТП', 'мочевина', 'креатинин', 'амилаза мочи', 'амилаза крови', 'кальций', 'ЛДГ', 'СРБ', 'рН', 'рСО2', 'рО2', 'НСО3', 'tCO2', 'ABE', 'SO2', 'АЧТВ', 'ПИ', 'МНО', 'PROMISE',]
-transliterate = (
-	function() {
-		var
-			rus = "щ   ш  ч  ц  ю  я  ё  ж  ъ  ы  э  а б в г д е з и й к л м н о п р с т у ф х ь".split(/ +/g),
-			eng = "shh sh ch cz yu ya yo zh `` y' e` a b v g d e z i j k l m n o p r s t u f x `".split(/ +/g)
-		;
-		return function(text, engToRus) {
-			var x;
-			for(x = 0; x < rus.length; x++) {
-				text = text.split(engToRus ? eng[x] : rus[x]).join(engToRus ? rus[x] : eng[x]);
-				text = text.split(engToRus ? eng[x].toUpperCase() : rus[x].toUpperCase()).join(engToRus ? rus[x].toUpperCase() : eng[x].toUpperCase());	
-			}
-			return text;
-		}
-	}
-)();
+ */

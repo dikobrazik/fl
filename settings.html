@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script>
+      var periodTitle = '';
+    </script>
+  <script src="js/scripts.js"></script>
+  <style>
+    .dropdown-menu{
+      position: absolute;
+      will-change: transform;
+      top: 0px;
+      left: 0px;
+      transform: translate3d(0px, 38px, 0px) !important;
+    }
+    .fs>a:hover{
+        box-shadow: 0 0 0 0.2rem rgba(225,83,97,.5);
+    }
+  </style>
+  
+</head>
+<body>
+    <ul class="nav nav-tabs nav-fill col bg-gradient-secondary pt-2">
+        <li class="nav-item mx-1">
+          <a class="nav-link text-light bg-secondary" href="info.html">Пациенты</a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link text-light bg-primary" href="settings.html">Настройки</a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link text-light bg-secondary" href="simple-expert-system-master/index.html">Правила</a>
+        </li>
+      </ul>
+  <div class="col">
+    <table class="table table-striped border-bottom mb-1">
+        <thead class="container">
+            <tr class="header col">
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <a id="add" class="btn btn-success text-white col">Добавить</a>
+  </div>
+  <a id="test" class=' btn btn-white text-white m-0 p-0 '>d</a>
+  <script>
+    document.querySelector('div.col').style.opacity = 0;
+    var periods = ['Общий','24 часа', '24-48 часов', '3 сутки','4-7 сутки','12-15 сутки','16-30 сутки','Выписка'] 
+    var index = 0;
+    var id, data;
+    document.getElementById('add').addEventListener('click',(e)=>{
+        var name = prompt("Пожалуйста, введите название диагностики", "");
+        while(name=='' && name != null){
+            name = prompt("Пожалуйста, введите название диагностики!", "");
+        }
+        if (name != null && name != "") {
+            toggleStore();
+            add({'name':name})
+            toggleStore();
+            document.location.reload(true);
+        }
+      
+    })
+    function setParam(e){
+      p = null;
+      type=null;
+      Array.from(document.getElementsByClassName('settings-block')).forEach((v,i) => {
+        if(e.parentElement.parentElement.parentElement.parentElement.parentElement == v) type = i;
+      })
+      window.open(window.location.href.split('/settings')[0]+'/settings_data.html?id=' +data[type].id+'&p='+e.parentElement.cellIndex+'&row='+e.parentElement.parentElement.rowIndex, '_self')
+    }
+    document.addEventListener('DOMContentLoaded', (e)=>{
+      document.getElementsByClassName('header')[0].innerHTML = periods.map(val => `<th scope="col" style="text-align: center; width:135px">${val}</th>`).join('')
+      toggleStore();
+      list(a)
+      toggleStore();
+    })
+    var a = (e)=>{
+        data = e;
+        for(var i = 0; i<e.length; i++){
+            var block = document.createElement('div')
+            block = document.querySelector('div.col').insertBefore(block, document.getElementById('add'))
+            
+            block.classList.add('border','border-info','rounded', 'p-1', 'mb-3','settings-block')
+            h3 = block.appendChild(document.createElement('div'))
+            h3.classList.add('container', 'col')
+            h3.innerHTML = `<div class="row">
+                <div class="col">
+                </div>
+                <div class="col">
+                    <h3 class="settings-title" onclick="changeTitle(this)" style="text-align:center;">${e[i].name}</h3>
+                </div>
+                <div class="col fs">
+                    <a onclick="deleteRow(this)" class='btn btn-danger m-2' style=' float: right;background: #dc3545 url("css/icons/delete.png");background-size: contain;width: 30px;height: 30px;'></a>
+                </div>
+            </div>`
+            var table = block.appendChild(document.createElement('table'))
+            table.innerHTML = `<tbody class='table-body'> </tbody>`;
+            table.classList.add('table','table-striped','border-bottom', 'mb-0')
+            table.style.tableLayout = 'fixed'
+            rowLenArr = []
+            for(var k in e[i]){
+                if(k.split('')[0]=='p') rowLenArr.push(e[i][k].length)
+            }
+            var tbody = table.getElementsByTagName('tbody')[0]
+            tbody.classList.add('container')
+            if(rowLenArr.length==0) rowLenArr[0] = 0
+            for(var r = 0; r < Math.max(...rowLenArr)+1; r++){
+                el =  tbody.appendChild(document.createElement('tr'))
+                el.classList.add('col')
+                tds = '';
+                for(var c = 0; c<periods.length; c++){
+                    param = e[i]['p'+c];
+                    content='+'
+                    if(param==undefined) content = '+'
+                    else if(param[r]==undefined) content = '+'
+                    else if(param[r]!=undefined) {
+                        content = param[r].name;
+                        tbodyWidth = table.clientWidth/(periods.length+1);
+                        while(getTextWidth(content)+24 > tbodyWidth){
+                            content = content.substr(0, content.length-1)
+                        }
+                        if(param[r].name.length > content.length) content = content.slice(0,content.length-2) + '..'
+                    }
+                    tds += `<td align="center" class="${c+1!=periods.length+1?'border-right px-0':'px-0'}" scope="col">
+                        <a class="btn btn-success text-white" onclick="setParam(this)">
+                            ${content}
+                        </a>
+                        </td>`;
+                }
+                el.innerHTML = tds
+            }
+        }  
+        animate({
+            duration: 2000,
+            timing: function(timeFraction) {
+                return timeFraction;
+            },
+            draw: function(progress) {
+                document.querySelector('div.col').style.opacity = Number(document.querySelector('div.col').style.opacity)+progress;
+            }
+        });
+    }
+    function changeTitle(e){
+        Array.from(document.querySelectorAll('h3')).forEach((v,i)=>{
+            if(v==e) id = i;
+        })
+        var name = prompt("Пожалуйста, введите название диагностики", "");
+        while(name=='' && name != null){
+            name = prompt("Пожалуйста, введите название диагностики!", "");
+        }
+        if (name != null && name != "") {
+            toggleStore();
+            data[id].name = name;
+            add(data[id]);
+            toggleStore();
+            document.location.reload(true);
+        }
+    }
+    var deleteRow = function(e){
+        toggleStore();
+        document.querySelectorAll('a.btn.btn-danger').forEach((el, i)=>{if(e==el) remove(Number(data[i].id));})
+        toggleStore();
+        document.location.reload(true);        
+    }
+    function getTextWidth(text){
+        var test = document.getElementById("test");
+        test.innerHTML = text;
+        var width = (test.clientWidth + 1);
+        test.innerHTML = 'gregaer';
+        return width;
+    }
+    var tablePattern = `<tbody class='table-body'> </tbody>`;
+  </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

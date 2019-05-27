@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script>
+    </script>
+  <script src="js/scripts.js"></script>
+  <style>
+    .dropdown-menu{
+      position: absolute;
+      will-change: transform;
+      top: 0px;
+      left: 0px;
+      transform: translate3d(0px, 38px, 0px) !important;
+    }
+  </style>
+  
+</head>
+<body>
+    <ul class="nav nav-tabs nav-fill col bg-gradient-secondary pt-2">
+        <li class="nav-item mx-1">
+          <a class="nav-link text-light bg-secondary" href="info.html">Пациенты</a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link text-light bg-primary" href="settings.html">Настройки</a>
+        </li>
+        <li class="nav-item mx-1">
+          <a class="nav-link text-light bg-secondary" href="simple-expert-system-master/index.html">Правила</a>
+        </li>
+      </ul>
+  <div class="col my-3">
+    <div id="form">
+        <div class="input-group input-group-default mb-3">
+          <div class="input-group-prepend col-4 p-0">
+            <span class="input-group-text col ">Название параметра</span>
+          </div>
+          <input type="text" id="name" class="form-control data-field" aria-label="Small" aria-describedby="inputGroup-sizing-default">
+        </div>
+        <div class="input-group input-group-default mb-3">
+          <div class="input-group-prepend col-4 p-0">
+            <span class="input-group-text col">Вид диагностики</span>
+          </div>
+          <input type="text" id="type" disabled class="form-control data-field" aria-label="Small" aria-describedby="inputGroup-sizing-default">
+        </div>
+        <div class="input-group input-group-default mb-3">
+          <div class="input-group-prepend col-4 p-0">
+            <span class="input-group-text col">Период</span>
+          </div>
+          <input type="text" id="period" disabled class="form-control data-field" aria-label="Small" aria-describedby="inputGroup-sizing-default">
+        </div>
+        <div class="params">
+            <h3 style="text-align: center">Размер фигуры</h3>
+            <div>
+                <textarea id="size" class='col' rows='1' style="overflow:hidden" onkeypress="getChar(event)"></textarea>
+            </div>
+        </div>
+        <div class="params">
+            <h3 style="text-align: center">Форма фигуры</h3>
+            <div>
+                <textarea id="shape" class='col' rows='1' style="overflow:hidden" onkeypress="getChar(event)"></textarea>
+            </div>
+        </div>
+        <div class="params">
+            <h3 style="text-align: center">Цвет фигуры</h3>
+            <div>
+                <textarea id="color" class='col' rows='1' style="overflow:hidden" onkeypress="getChar(event)"></textarea>
+            </div>
+        </div>
+        <div class="params">
+            <h3 style="text-align: center">Описание</h3>
+            <div>
+                <textarea id="description" class='col' rows='1' style="overflow:hidden" onkeypress="getChar(event)"></textarea>
+            </div>
+        </div>
+        <div>
+            <button type="button" id="save" class="btn btn-primary col mb-3">Сохранить</button>
+        </div>
+    </div>
+  </div>
+  <script>
+    var periods = ['Общий','24 часа', '24-48 часов', '3 сутки','4-7 сутки','12-15 сутки','16-30 сутки','Выписка'] 
+    var index = 0;
+    var id, data, row;
+    var a = (e) => {
+        data = e;
+        id = e.id;
+        if(e['p'+periodIndex]!=undefined){
+            if(e['p'+periodIndex][row]!=undefined){
+                document.getElementById('name').value = e['p'+periodIndex][row].name
+                document.getElementById('size').value = e['p'+periodIndex][row].size!=undefined?e['p'+periodIndex][row].size:'';
+                document.getElementById('shape').value = e['p'+periodIndex][row].shape!=undefined?e['p'+periodIndex][row].shape:'';;
+                document.getElementById('color').value = e['p'+periodIndex][row].color!=undefined?e['p'+periodIndex][row].color:'';;
+                document.getElementById('description').value = e['p'+periodIndex][row].description!=undefined?e['p'+periodIndex][row].description:'';;
+            }
+        }
+        document.getElementById('type').value = e.name;
+        document.getElementById('period').value = periods[periodIndex]
+    }
+    if(window.location.search.substr(1) != ''){
+        id = window.location.search.substr(1).split('&')[0].split('=')[1];
+        periodIndex = window.location.search.substr(1).split('&')[1].split('=')[1]
+        row = window.location.search.substr(1).split('&')[2].split('=')[1]
+        toggleStore();
+        get(id, a)
+        toggleStore();
+    }
+    document.getElementById('save').addEventListener('click', ()=>{
+        name = document.getElementById('name').value
+        data['p' + periodIndex] = []
+        data['p' + periodIndex][0] = {
+            'name':name,
+            'size':document.getElementById('size').value,
+            'shape':document.getElementById('shape').value,
+            'color':document.getElementById('color').value,
+            'description':document.getElementById('description').value,
+        }
+        toggleStore();
+        add(data)
+        toggleStore();
+    })
+    function getChar(event) {
+        if (event.which == null) { // IE
+            if (event.keyCode == 13){
+                event.path[0].setAttribute('rows',Number(event.path[0].getAttribute('rows'))+1)
+            }else if(event.keyCode == 8){
+                delRow(event);
+            }
+        }
+        if (event.which != 0 && event.charCode != 0) { // все кроме IE
+            if (event.which == 13){
+                event.path[0].setAttribute('rows',Number(event.path[0].getAttribute('rows'))+1)
+            }else if(event.which == 8){
+                delRow(event);
+            }
+        }
+    }
+  </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

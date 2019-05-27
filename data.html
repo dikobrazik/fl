@@ -25,6 +25,9 @@
           <a class="nav-link text-light bg-primary" href="info.html">Пациенты</a>
         </li>
         <li class="nav-item mx-1">
+          <a class="nav-link text-light bg-secondary" href="settings.html">Настройки</a>
+        </li>
+        <li class="nav-item mx-1">
           <a class="nav-link text-light bg-secondary" href="simple-expert-system-master/index.html">Правила</a>
         </li>
       </ul>
@@ -92,7 +95,7 @@
     var id;
     if(window.location.search.substr(1) != ''){
       id = window.location.search.substr(1).split('=')[1];
-      get(id)
+      get(id, fillAllFields)
     }
     var addPeriodInfo = function(e){
         var el =  document.createElement('div')
