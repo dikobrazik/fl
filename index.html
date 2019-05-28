@@ -96,21 +96,31 @@
                     if(!isNaN(i.split('')[1]) || i=='surname'){
                         data.circles.push({
                             name:'sloy'+i.split('')[1],
-                                qr:[
-                                    [
-                                        {
-                                            n:10,
-                                            size:'medium',
-                                            color:"green",
-                                        }
-                                    ]
+                            qr:[
+                                [
+                                    {
+                                        n:10,
+                                        size:'medium',
+                                        color:"green",
+                                    }
                                 ]
+                            ]
                         })
                     }
                 }
                 init(true)
             }
+            var b = (res) =>{
+                data.names = []
+                data.parts = res.length;
+                for(var i = 0; i<res.length; i++){
+                    data.names.push(res[i].name)
+                }
+            }
             if(document.location.search!=''){
+                toggleStore();
+                list(b);
+                toggleStore();
                 get(document.location.search.split('=')[1], a)
             }
             const getContext = () => document.getElementById('myCanvas').getContext('2d');
@@ -123,10 +133,10 @@
             var topOffset = document.getElementById('myCanvas').offsetTop;
             var ctx = getContext();
             function draw(width, height) {
-                getContext().canvas.width  = width;
-                getContext().canvas.height = height;
-                h = height;
-                w=width;
+                // getContext().canvas.width  = width;
+                // getContext().canvas.height = height;
+                // h=height;
+                // w=width;
             }
             document.getElementById('plus').onclick = function() {
                 scale+=0.1
@@ -320,7 +330,7 @@
                     if(data.names[i] !== undefined) {
                         x = w/2+(circles[circles.length-1]+130)*Math.sin((partDegree*i+partDegree/2) * Math.PI / 180);
                         y = h/2+(circles[circles.length-1]+30)*Math.cos((partDegree*i+partDegree/2) * Math.PI / 180);
-                        wrapText(getContext(), data.names[i], x,y,200)
+                        wrapText(getContext(), data.names[i], x,y,50)
                     }
                 } 
                 for(var i = 0; i < circles.length; i++){
