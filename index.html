@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
             html, body{
                 width:100%;
@@ -50,8 +51,20 @@
             border-right: 0;
             }
         </style>
+        <script src="js/scripts.js"></script>
     </head>
     <body>
+        <ul class="nav nav-tabs nav-fill col bg-gradient-secondary pt-2">
+            <li class="nav-item mx-1">
+                <a class="nav-link text-light bg-primary" href="info.html">Пациенты</a>
+            </li>
+            <li class="nav-item mx-1">
+                <a class="nav-link text-light bg-secondary" href="settings.html">Настройки</a>
+                </li>
+            <li class="nav-item mx-1">
+                <a class="nav-link text-light bg-secondary" href="simple-expert-system-master/index.html">Правила</a>
+            </li>
+        </ul>
         <div id="container">
             <div>
                 <canvas id="myCanvas" width=1200 height=600>
@@ -75,313 +88,31 @@
             <button style="width: 4vw" id='minus'>-</button>
             <button style="width: 4vw" id='plus'>+</button>
         </div>
+        <script type="text/javascript" src="data.js"></script>
         <script>
-            var data = {
-                parts:5 ,
-                names:[
-                    'Lorem ipsum dolor sit amet.',
-                    'Lorem ipsum dolor sit amet.',
-                    'Lorem ipsum dolor sit amet.',
-                    'Lorem ipsum dolor sit amet.',
-                    'Lorem ipsum dolor sit amet.',
-                    'Lorem ipsum dolor sit amet.',
-                    'Lorem ipsum dolor sit amet.',
-                ],
-                circles:[
-                    {
-                        name:'sloy1',
-                        qr:[
-                            [
-                                {
-                                    mark:1,
-                                    n:7,
-                                    size:'medium',
-                                    color:"green",
-                                },
-                                {
-                                    mark:1,
-                                    n:5,
-                                    size:'small',
-                                    color:"red",
-                                },
-                                {
-                                    mark:2,
-                                    n:7,
-                                    size:'medium',
-                                    color:"yellow",
-                                },
-                                {
-                                    mark:2,
-                                    n:5,
-                                    size:'big',
-                                    color:"red",
-                                    stroke:'stroke',
-                                },
-                                {
-                                    mark:1,
-                                    n:9,
-                                    size:'medium',
-                                    color:"red",
-                                },
-                                {
-                                    mark:3,
-                                    n:5,
-                                    size:'small',
-                                    color:"green",
-                                },
-                                {
-                                    n:7,
-                                    size:'small',
-                                    color:"red",
-                                },
-                                {
-                                    n:5,
-                                    size:'small',
-                                    color:"red",
-                                    stroke:'stroke',
-                                },
-                                {
-                                    mark:3,
-                                    n:9,
-                                    size:'medium',
-                                    stroke:'stroke',
-                                    color:"green",
-                                },
-                            ],
-                            [],
-                            [],
-                            [
-                                {
-                                    mark:2,
-                                    n:0,
-                                    size:'big',
-                                    color:"red",
-                                },
-                            ],
-                        ]
-                    },
-                    {
-                        name:'sloy2',
-                        qr:[
-                            [
-                                {
-                                    n:10,
-                                    size:'medium',
-                                    color:"green",
-                                },
-                                {
-                                    n:5,
-                                    size:'small',
-                                    color:"yellow",
-                                },
-                                {
-                                    mark:2,
-                                    n:6,
-                                    size:'small',
-                                    color:"yellow",
-                                },
-                                {
-                                    n:16,
-                                    size:'big',
-                                    color:"red",
-                                },
-                                {
-                                    mark:2,
-                                    n:4,
-                                    size:'big',
-                                    color:"green",
-                                },
-                                {
-                                    n:10,
-                                    size:'small',
-                                    color:"green",
-                                    stroke:'stroke',
-                                },
-                                {
-                                    mark:1,
-                                    n:5,
-                                    size:'medium',
-                                    color:"green",
-                                },
-                                {
-                                    n:6,
-                                    size:'medium',
-                                    color:"red",
-                                },
-                                {
-                                    n:16,
-                                    size:'small',
-                                    color:"red",
-                                },
-                                {
-                                    mark:3,
-                                    n:4,
-                                    size:'small',
-                                    color:"yellow",
-                                },
-                                
-                                {
-                                    n:16,
-                                    size:'small',
-                                    color:"red",
-                                },
-                                {
-                                    n:4,
-                                    size:'small',
-                                    color:"green",
-                                },
-                            ],
-                            [
-                                {
-                                    n:9,
-                                    size:'medium',
-                                    color:"green",
-                                },
-                                {
-                                    mark:3,
-                                    n:4,
-                                    size:'medium',
-                                    stroke:'stroke',
-                                    color:"red",
-                                },
-                                {
-                                    n:3,
-                                    size:'medium',
-                                    color:"green",
-                                },
-                                {
-                                    n:"23",
-                                    size:'big',
-                                    color:"red",
-                                },
-                            ],
-                            [   {
-                                    n:"5",
-                                    size:'big',
-                                    color:"green",
-                                },
-                                {
-                                    n:6,
-                                    size:'medium',
-                                    color:"yellow",
-                                },
-                                {
-                                    n:7,
-                                    size:'small',
-                                    color:"green",
-                                },
-                                {
-                                    mark:2,
-                                    n:8,
-                                    size:'big',
-                                    color:"green",
-                                },
-                            ],
-                            [
-                                {
-                                    n:33,
-                                    size:'medium',
-                                    color:"green",
-                                },
-                                {
-                                    mark:3,
-                                    n:4,
-                                    size:'medium',
-                                    stroke:'stroke',
-                                    color:"red",
-                                },
-                                {
-                                    mark:3,
-                                    n:5,
-                                    size:'big',
-                                    color:"green",
-                                },
-                                {
-                                    n:3,
-                                    size:'big',
-                                    color:"green",
-                                },
-                            ],
-                        ]
-                    },
-                    {
-                        name:'sloy3 ',
-                        qr:[
-                            [
-                                {
-                                    mark:2,
-                                    n:6,
-                                    size:'medium',
-                                    stroke:'stroke',
-                                    color:"green",
-                                },
-                                {
-                                    n:5,
-                                    size:'small',
-                                    color:"green",
-                                }
-                            ],
-                            [],
-                            [],
-                            [
-                                {
-                                    n:4,
-                                    size:'small',
-                                    color:"red",
-                                },
-                                {
-                                    mark:3,
-                                    n:8,
-                                    size:'small',
-                                    color:"green",
-                                },
-                                {
-                                    n:8,
-                                    size:'big',
-                                    color:"red",
-                                },
-                                {
-                                    mark:2,
-                                    n:5,
-                                    size:'small',
-                                    color:"green",
-                                },
-                                {
-                                    mark:3,
-                                    n:9,
-                                    size:'small',
-                                    color:"green",
-                                },
-                                {
-                                    mark:1,
-                                    n:6,
-                                    size:'small',
-                                    color:"red",
-                                },
-                                
-                            ],
-                            [
-
-                            ],
-                            [
-                                {
-                                    n:6,
-                                    size:'medium',
-                                    color:"yellow",
-                                },
-                            ],
-                            [
-                                {
-                                    n:6,
-                                    size:'medium',
-                                    color:"red",
-                                },
-                            ]
-                        ]
+            var a = (res) => {
+                data.circles = []
+                for(var i in res){
+                    if(!isNaN(i.split('')[1]) || i=='surname'){
+                        data.circles.push({
+                            name:'sloy'+i.split('')[1],
+                                qr:[
+                                    [
+                                        {
+                                            n:10,
+                                            size:'medium',
+                                            color:"green",
+                                        }
+                                    ]
+                                ]
+                        })
                     }
-                ],
-            };
-            
+                }
+                init(true)
+            }
+            if(document.location.search!=''){
+                get(document.location.search.split('=')[1], a)
+            }
             const getContext = () => document.getElementById('myCanvas').getContext('2d');
             
             var scale = 1;
@@ -412,7 +143,6 @@
                 else if(options.size == 'medium') r=6,R=12;
                 else if(options.size == 'big') r=8,R=16;
                 var ctx = getContext();
-                //ctx.globalCompositeOperation = "source-over";
                 if(options.n != 0){
                     for(var i = 0,a = 0; i<2*options.n+1;i++,a += Math.PI / options.n){
                         var l = i % 2 == 0 ? options.grad? (r)*scale:r*scale : options.grad? (R)*scale:R*scale;
@@ -548,7 +278,7 @@
                             circles[i] +=18*scale;
                             delta+=18*scale;
                         }
-                        if(i==0 && data.parts !=4) ply=2;
+                        if(i==0 && data.parts !=4) ply=1.2;
                         for(var k=0, num = degrees(14, radius+24*scale*ply);k<part.length;k++, num += degrees(34, radius+24*scale*ply)){
                             if(k==0 && i==0) {
                                 num=partDegree/2;
@@ -776,5 +506,8 @@
             });
             
         </script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> 
     </body>
 </html>

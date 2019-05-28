@@ -20,7 +20,7 @@ function connectDB(f){
 /**
  * 
  * @param {number} id - id пациента в бд
- * @param {function} func - функция в которую передается поле с id
+ * @param {function} func - callback в которую передается поле с id
  */
 function get(id, func){
     connectDB(function(db){

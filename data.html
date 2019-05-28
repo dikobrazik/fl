@@ -103,7 +103,7 @@
         e.parentElement.insertBefore(el,e)
         return el;
     }
-    var fillAllFields = function(a){
+    function fillAllFields(a){
         for(var f in a){
             if(f=='id') continue;
             if(document.getElementById(f)!=undefined) document.getElementById(f).value = a[f]
