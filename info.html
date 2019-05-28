@@ -75,7 +75,9 @@
             }
             var lol;
             var analysis = function(e){
-                
+                var pac;
+                document.getElementsByTagName('tbody')[0].childNodes.forEach((el,i) => {if(el==e.parentElement.parentElement) {pac = data[i]}})
+                window.open(window.location.href.split('/i')[0]+'/index.html?id=' + pac.id, '_self')
             }
             var deleteRow = function(e){
                 document.querySelectorAll('a.btn.btn-danger').forEach((el, i)=>{if(e==el) remove(Number(data[i].id));;})
