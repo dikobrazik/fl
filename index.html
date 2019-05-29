@@ -90,6 +90,8 @@
         </div>
         <script type="text/javascript" src="data.js"></script>
         <script>
+            var timerId;
+            redata = data;
             var a = (res) => {
                 data.circles = []
                 for(var i in res){
@@ -108,7 +110,13 @@
                         })
                     }
                 }
-                init(true)
+                timerId = setInterval(function() {
+                    if(data.names[0]!='Lorem ipsum dolor sit amet.' || data.names[0]!=''){
+                        init(true)
+                    }
+                }, 100);
+                // setTimeout(()=>{init(true)}, 500);
+                // init(true);
             }
             var b = (res) =>{
                 data.names = []
@@ -117,12 +125,7 @@
                     data.names.push(res[i].name)
                 }
             }
-            if(document.location.search!=''){
-                toggleStore();
-                list(b);
-                toggleStore();
-                get(document.location.search.split('=')[1], a)
-            }
+            
             const getContext = () => document.getElementById('myCanvas').getContext('2d');
             
             var scale = 1;
@@ -133,10 +136,10 @@
             var topOffset = document.getElementById('myCanvas').offsetTop;
             var ctx = getContext();
             function draw(width, height) {
-                // getContext().canvas.width  = width;
-                // getContext().canvas.height = height;
-                // h=height;
-                // w=width;
+                getContext().canvas.width  = width;
+                getContext().canvas.height = height;
+                h=height;
+                w=width;
             }
             document.getElementById('plus').onclick = function() {
                 scale+=0.1
@@ -262,13 +265,20 @@
                     marginTop+=lineHeight;
                 }
             }
-
-            init(true);
+            document.addEventListener('DOMContentLoaded', ()=>{
+                if(document.location.search!=''){
+                    toggleStore();
+                    list(b);
+                    toggleStore();
+                    get(document.location.search.split('=')[1], a)
+                }
+            })
             function init(editCircles){
+                if(timerId!=undefined) clearInterval(timerId);
                 ctx.clearRect(0,0,w,h)
                 shapes = [];
                 if(editCircles)circles=[];
-                else if(editCircles === undefined) draw(circles[circles.length-1]*2 + 460, circles[circles.length-1]*2.5);
+                else if(editCircles === undefined) draw(circles[circles.length-1]*2 + 460, circles[circles.length-1]*2.5+200);
                 var partDegree = 360/data.parts;
                 var alpha = (180-partDegree)/2;
                 for(var i = 0; i<data.circles.length; i++){
@@ -288,7 +298,7 @@
                             circles[i] +=18*scale;
                             delta+=18*scale;
                         }
-                        if(i==0 && data.parts !=4) ply=1.2;
+                        if(i==0 && data.parts !=4) ply=1.6; //Коэфициент отдаление первой фигуры в центральном круге. Чем большее - тем дальше фигура
                         for(var k=0, num = degrees(14, radius+24*scale*ply);k<part.length;k++, num += degrees(34, radius+24*scale*ply)){
                             if(k==0 && i==0) {
                                 num=partDegree/2;
@@ -330,7 +340,7 @@
                     if(data.names[i] !== undefined) {
                         x = w/2+(circles[circles.length-1]+130)*Math.sin((partDegree*i+partDegree/2) * Math.PI / 180);
                         y = h/2+(circles[circles.length-1]+30)*Math.cos((partDegree*i+partDegree/2) * Math.PI / 180);
-                        wrapText(getContext(), data.names[i], x,y,50)
+                        wrapText(getContext(), data.names[i], x,y,100)
                     }
                 } 
                 for(var i = 0; i < circles.length; i++){
@@ -338,7 +348,7 @@
                     ctx.arc(w/2,h/2,circles[i],0 * Math.PI, 2 * Math.PI)
                     ctx.stroke();
                 }
-                if(editCircles) return init();
+                if(editCircles) return init(false);
             }
             function addTable(s){
                 if(document.getElementsByTagName('table')[0] !== undefined) document.getElementsByTagName('table')[0].remove()
