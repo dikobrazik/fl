@@ -41,6 +41,15 @@
                 </tbody>
             </table>
             <a href='data.html' class="btn btn-success col">Добавить</a>
+            <div class="container col">
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col"></div>
+                    <div class="col">
+                        <a onclick="importJSON()" class="btn btn-primary text-white m-2 col-6">Import</a>           
+                    </div>
+                </div>
+            </div>
         <script>
             var data = [];
             const upd = function(){
@@ -82,6 +91,14 @@
             var deleteRow = function(e){
                 document.querySelectorAll('a.btn.btn-danger').forEach((el, i)=>{if(e==el) remove(Number(data[i].id));;})
                 upd();
+            }
+            var importJSON = function(){
+                var request = new XMLHttpRequest();
+                request.open("GET", "1.json", false);
+                request.overrideMimeType("application/json");
+                request.send(null);
+                var jsonData = JSON.parse(request.responseText);
+                console.log(jsonData);
             }
         </script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
