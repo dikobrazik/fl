@@ -145,8 +145,6 @@
                         init(true)
                     }
                 }, 100);
-                // setTimeout(()=>{init(true)}, 500);
-                // init(true);
             }
             var c = (e)=>{
                 if(!e.getElementsByTagName('input')[0].hasAttribute('checked')){
@@ -169,7 +167,7 @@
             var b = (res) =>{
                 data.names = []
                 data.parts = res.length>9? 9: res.length;
-                for(var i = 0; i<9; i++){
+                for(var i = 0; i<data.parts; i++){
                     data.names.push(res[i].name)
                 }
                 for(var i = 0; i<res.length; i+=2){
