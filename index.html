@@ -30,25 +30,34 @@
                 justify-content:center;
                 align-items: center;
             }
-            table {
+            #htable {
             border-collapse: collapse;
             }
-            table td, table th {
+            #htable td, #htable th {
             border: 1px solid rgba(137, 43, 226, 0.603);
             }
-            table tr:first-child th {
+            #htable tr:first-child th {
             border-top: 0;
             }
-            table tr:last-child td {
+            #htable tr:last-child td {
             border-bottom: 0;
             }
-            table tr td:first-child,
-            table tr th:first-child {
+            #htable tr td:first-child,
+            #htable tr th:first-child {
             border-left: 0;
             }
-            table tr td:last-child,
-            table tr th:last-child {
+            #htable tr td:last-child,
+            #htable tr th:last-child {
             border-right: 0;
+            }
+            .noselect {
+                -webkit-touch-callout: none; /* iOS Safari */
+                -webkit-user-select: none; /* Safari */
+                -khtml-user-select: none; /* Konqueror HTML */
+                -moz-user-select: none; /* Firefox */
+                    -ms-user-select: none; /* Internet Explorer/Edge */
+                        user-select: none; /* Non-prefixed version, currently
+                                            supported by Chrome and Opera */
             }
         </style>
         <script src="js/scripts.js"></script>
@@ -65,25 +74,39 @@
                 <a class="nav-link text-light bg-secondary" href="simple-expert-system-master/index.html">Правила</a>
             </li>
         </ul>
+        <div class=" my-3 col">
+            <div class="row">
+                <div class="col" id="name"></div>
+                <div class="col" id="dob"></div>
+                <div class="col" id="date"></div>
+            </div>
+        </div>
         <div id="container">
             <div>
-                <canvas id="myCanvas" width=1200 height=600>
+                <canvas id="myCanvas" width=1200 height=800>
     
                 </canvas>
                 
             </div>
-            <div id="hintC"> 
-                <div  id='hint'>
+            <div id="hintC">
+                <div id='parts'>
+                        <table class="table col">
+                                <tbody class="noselect">
+                                </tbody>
+                              </table>
+                </div>
+                <div id='hint'>
                     <p>
                         
                     </p>
                 </div>
             </div>
         </div>
-        <div style="display: none">
-            <div>
-                    <p>Scale:</p>
-                    <p id="scale"></p> 
+        <div>
+        <!-- <div style="display: none"> -->
+            <div class="row mx-2">
+                <p class="mr-1">Масштаб:</p>
+                <p id="scale">1</p> 
             </div>
             <button style="width: 4vw" id='minus'>-</button>
             <button style="width: 4vw" id='plus'>+</button>
@@ -95,9 +118,9 @@
             var a = (res) => {
                 data.circles = []
                 for(var i in res){
-                    if(!isNaN(i.split('')[1]) || i=='surname'){
+                    if(!isNaN(i.split('')[1])&&i.split('')[0]=='p' || i=='surname'){
                         data.circles.push({
-                            name:'sloy'+i.split('')[1],
+                            name:'sloy '+i.split('')[1],
                             qr:[
                                 [
                                     {
@@ -110,6 +133,13 @@
                         })
                     }
                 }
+                var name = document.getElementById('name').appendChild(document.createElement('h4'))
+                name.textContent = res.surname + ' ' + res.name + ' ' + res.lastname;
+                name = document.getElementById('dob').appendChild(document.createElement('h4'))
+                name.textContent = 'Дата рождения: '+res.dob.split('-')[2]+'.'+res.dob.split('-')[1]+'.'+res.dob.split('-')[0];
+                name = document.getElementById('date').appendChild(document.createElement('h4'))
+                name.textContent = 'Дата поступления: '+res.date.split('-')[2]+'.'+res.date.split('-')[1]+'.'+res.date.split('-')[0];
+                topOffset = document.getElementById('myCanvas').offsetTop;
                 timerId = setInterval(function() {
                     if(data.names[0]!='Lorem ipsum dolor sit amet.' || data.names[0]!=''){
                         init(true)
@@ -118,11 +148,36 @@
                 // setTimeout(()=>{init(true)}, 500);
                 // init(true);
             }
+            var c = (e)=>{
+                if(!e.getElementsByTagName('input')[0].hasAttribute('checked')){
+                    var s = Array.from(document.getElementsByTagName('tbody')[0].getElementsByTagName('td')).filter(v=>{
+                        if(v.getElementsByTagName('input')[0].hasAttribute('checked')) return 1;
+                    })
+                    if(s.length<9){
+                        e.getElementsByTagName('input')[0].toggleAttribute('checked');
+                        data.names.splice(e.getElementsByTagName('input')[0].id,0,e.getElementsByTagName('label')[0].textContent)
+                        data.parts++;
+                    } 
+                }else{
+                    e.getElementsByTagName('input')[0].toggleAttribute('checked');
+                    var index = data.names.indexOf(e.getElementsByTagName('label')[0].textContent);
+                    if (index !== -1) data.names.splice(index, 1);
+                    data.parts--;
+                }
+                init(true)
+            }
             var b = (res) =>{
                 data.names = []
-                data.parts = res.length;
-                for(var i = 0; i<res.length; i++){
+                data.parts = res.length>9? 9: res.length;
+                for(var i = 0; i<9; i++){
                     data.names.push(res[i].name)
+                }
+                for(var i = 0; i<res.length; i+=2){
+                    var d = document.getElementsByTagName('tbody')[0].appendChild(document.createElement('tr'))
+                    if(i==0) d.classList.add('border-top-0')
+                    if(i+1 != res.length) d.classList.add('border-bottom')
+                    d.innerHTML = `<td class="border-right ${i==0?'border-top-0':''}" onclick="c(this)"><input type="checkbox" ${i<9?'checked':''} class="mr-1" id="${i}"><label >${res[i].name}</label></td>`
+                    d.innerHTML += `<td class=" ${i==0?'border-top-0':''}" onclick="c(this)"><input type="checkbox" ${i+1<9?'checked':''} class="mr-1" id="${i+1}"><label >${res[i+1].name}</label></td>`
                 }
             }
             
@@ -131,7 +186,8 @@
             var scale = 1;
             var circles = [];
             var shapes = [];
-            var w=document.getElementById('myCanvas').width, h=document.getElementById('myCanvas').height;
+            var w=document.getElementById('myCanvas').width, 
+                h=document.getElementById('myCanvas').height;
             var leftOffset = document.getElementById('myCanvas').offsetLeft;
             var topOffset = document.getElementById('myCanvas').offsetTop;
             var ctx = getContext();
@@ -143,10 +199,12 @@
             }
             document.getElementById('plus').onclick = function() {
                 scale+=0.1
+                document.getElementById('scale').textContent = scale.toFixed(1)
                 init(true);
             };
             document.getElementById('minus').onclick = function() {
                 if(scale > 0.65)scale-=0.1
+                document.getElementById('scale').textContent = scale.toFixed(1)
                 init(true);
             };
 
@@ -352,8 +410,9 @@
                 if(editCircles) return init(false);
             }
             function addTable(s){
-                if(document.getElementsByTagName('table')[0] !== undefined) document.getElementsByTagName('table')[0].remove()
+                if(document.getElementById('htable') != undefined) document.getElementById('htable').remove()
                 var t = document.createElement('table');
+                t.id = 'htable'
                 t.style.width = '30vw'
                 var thead = document.createElement('thead');
                 t.appendChild(thead);
@@ -367,8 +426,7 @@
                     <th>Mark</th>
                 </tr>
                 `
-                var table = document.createElement('tbody');
-                t.appendChild(table);
+                var table = t.appendChild(document.createElement('tbody'));
                 
                 for(var i = 0; i < s.length; i++){
                     if(s[i] === undefined) continue
@@ -522,7 +580,7 @@
                         })
                     }
                     editedShapes = [];
-                if(document.getElementsByTagName('table')[0] !== undefined){document.getElementsByTagName('table')[0].remove(); document.getElementById('hint').style.display = 'none'}                    
+                if(document.getElementById('htable') != undefined){document.getElementById('htable').remove(); document.getElementById('hint').style.display = 'none'}                    
                 }
             });
             
