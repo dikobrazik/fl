@@ -136,7 +136,8 @@
         rad2 = document.querySelector('#exampleRadios2')
         for(var element of document.querySelectorAll('.data-field,.added-data-field')){
             if(hasSomeParentTheClass(element, 'period-block')) continue;
-            if(element.getAttribute('name') != 'gender') a[element.id] = element.value
+            if(element.id == '') a[generalInformationArray.indexOf(element.parentElement.getElementsByTagName('button')[0].textContent)] = element.value
+            else if(element.getAttribute('name') != 'gender') a[element.id] = element.value
             else if(element.checked) a['gender'] = element.value
         }
         for(var block of document.getElementsByClassName('period-block')){
@@ -144,7 +145,7 @@
             Array.from(document.getElementsByClassName('period-block')).forEach((el,i) => {if(el==block) {blockIndex = i}})        
             b = {};
             for(var element of block.querySelectorAll('.added-data-field')){
-                b[element.id] = element.value
+                b[periodInformationArray.indexOf(element.parentElement.getElementsByTagName('button')[0].textContent)] = element.value
             }
             a['p'+blockIndex] = b;
         }

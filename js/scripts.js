@@ -102,21 +102,37 @@ ${periodInformationArray.map(v=>'<a class="dropdown-item" onclick="btnName(this)
 <input type="text" class="form-control added-data-field" aria-label="Text input with dropdown button">
 </div>`;
 function filterFunction(data) {
-    var input, filter, a, i;
-    input = data;
-    filter = input.value.toUpperCase();
-    div = data.parentElement.parentElement.parentElement.parentElement;
-    
-    a = div.getElementsByTagName("a");
-    for (i = 0; i < a.length; i++) {
-      txtValue = a[i].textContent || a[i].innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        a[i].style.display = "";
-      } else {
-        a[i].style.display = "none";
-      }
+  var input, filter, a, i;
+  input = data;
+  filter = input.value.toUpperCase();
+  div = data.parentElement.parentElement.parentElement.parentElement;
+  
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
     }
   }
+}
+function listFilterFunction(data) {
+  var input, filter, a, i;
+  input = data;
+  filter = input.value.toUpperCase();
+  div = data.parentElement;
+  a = div.getElementsByTagName("li");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].hidden = false;
+    } else {
+      a[i].hidden = true;
+    }
+    if(filter=='') a[i].hidden = true
+  }
+}
 
 function animate(options) {
   var start = performance.now();
@@ -129,116 +145,117 @@ function animate(options) {
           requestAnimationFrame(animate);
       }
   });
+}/**
+ * 
+ * @param {string} data - данные
+ * @param {string} filename - имя файла
+ * @param {HTMLElement} link - экземпляр кнопки 
+ */
+function downloadFile(data, filename, link){
+    var file;
+    var properties = {type: 'text/plain'}; // Specify the file's mime-type.
+    try {
+        file = new File(data, filename, properties);
+    } catch (e) {
+        file = new Blob([data], properties);
+    }
+    var url = URL.createObjectURL(file);
+    link.href = url;
 }
 var surnames = ['Смирнов', 'Иванов', 'Кузнецов', 'Соколов', 'Попов', 'Лебедев','Козлов', 'Новиков', 'Морозов', 'Петров', 'Волков', 'Соловьёв','Васильев', 'Зайцев', 'Павлов', 'Семёнов', 'Голубев', 'Виноградов','Богданов', 'Воробьёв', 'Фёдоров', 'Михайлов', 'Беляев', 'Тарасов', 'Белов']
-var man = ['Алан', 'Александр', 'Алексей	', 'Альберт', 'Анатолий', 'Андрей', 'Антон', 'Арсен', 'Арсений', 'Артем', 'Артемий', 'Артур', 'Богдан', 'Борис', 'Вадим', 'Валентин', 'Валерий', 'Василий', 'Виктор', 'Виталий', 'Владимир', 'Владислав', 'Всеволод', 'Вячеслав', 'Геннадий', 'Георгий', 'Герман', 'Глеб', 'Гордей', 'Григорий', 'Давид', 'Дамир', 'Даниил', 'Демид', 'Демьян', 'Денис', 'Дмитрий', 'Евгений', 'Егор', 'Елисей', 'Захар', 'Иван', 'Игнат', 'Игорь', 'Илья', 'Ильяс', 'Камиль', 'Карим', 'Кирилл', 'Клим', 'Константин', 'Лев', 'Леонид', 'Макар', 'Максим', 'Марат', 'Марк', 'Марсель', 'Матвей', 'Мирон', 'Мирослав', 'Михаил', 'Назар', 'Никита', 'Николай', 'Олег', 'Павел', 'Петр', 'Платон', 'Прохор', 'Рамиль', 'Ратмир', 'Ринат', 'Роберт', 'Родион', 'Роман', 'Ростислав', 'Руслан', 'Рустам', 'Савва', 'Савелий', 'Святослав', 'Семен', 'Сергей', 'Станислав', 'Степан', 'Тамерлан', 'Тимофей', 'Тимур', 'Тихон', 'Федор', 'Филипп', 'Шамиль', 'Эдуард', 'Эльдар', 'Эмиль', 'Эрик', 'Юрий', 'Ян', 'Ярослав']
+var man = ['Алан', 'Александр', 'Алексей', 'Альберт', 'Анатолий', 'Андрей', 'Антон', 'Арсен', 'Арсений', 'Артем', 'Артемий', 'Артур', 'Богдан', 'Борис', 'Вадим', 'Валентин', 'Валерий', 'Василий', 'Виктор', 'Виталий', 'Владимир', 'Владислав', 'Всеволод', 'Вячеслав', 'Геннадий', 'Георгий', 'Герман', 'Глеб', 'Гордей', 'Григорий', 'Давид', 'Дамир', 'Даниил', 'Демид', 'Демьян', 'Денис', 'Дмитрий', 'Евгений', 'Егор', 'Елисей', 'Захар', 'Иван', 'Игнат', 'Игорь', 'Илья', 'Ильяс', 'Камиль', 'Карим', 'Кирилл', 'Клим', 'Константин', 'Лев', 'Леонид', 'Макар', 'Максим', 'Марат', 'Марк', 'Марсель', 'Матвей', 'Мирон', 'Мирослав', 'Михаил', 'Назар', 'Никита', 'Николай', 'Олег', 'Павел', 'Петр', 'Платон', 'Прохор', 'Рамиль', 'Ратмир', 'Ринат', 'Роберт', 'Родион', 'Роман', 'Ростислав', 'Руслан', 'Рустам', 'Савва', 'Савелий', 'Святослав', 'Семен', 'Сергей', 'Станислав', 'Степан', 'Тамерлан', 'Тимофей', 'Тимур', 'Тихон', 'Федор', 'Филипп', 'Шамиль', 'Эдуард', 'Эльдар', 'Эмиль', 'Эрик', 'Юрий', 'Ян', 'Ярослав']
 var woman = ['Агата', 'Агния', 'Аделина', 'Аида', 'Аксинья', 'Александра', 'Алена', 'Алина', 'Алиса', 'Алия', 'Алла', 'Альбина', 'Амелия', 'Амина', 'Анастасия', 'Ангелина', 'Анна', 'Антонина', 'Ариана', 'Арина', 'Валентина', 'Валерия', 'Варвара', 'Василина', 'Василиса', 'Вера', 'Вероника', 'Виктория', 'Виолетта', 'Владислава', 'Галина', 'Дарина', 'Дарья', 'Диана', 'Дина', 'Ева', 'Евангелина', 'Евгения', 'Екатерина', 'Елена', 'Елизавета', 'Есения', 'Жанна', 'Зарина', 'Злата', 'Илона', 'Инна', 'Ирина', 'Камилла', 'Карина', 'Каролина', 'Кира', 'Клавдия', 'Кристина', 'Ксения', 'Лариса', 'Лейла', 'Лиана', 'Лидия', 'Лилия', 'Лина', 'Лия', 'Любовь', 'Людмила', 'Майя', 'Маргарита', 'Марианна', 'Марина', 'Мария', 'Мелания', 'Мила', 'Милана', 'Милена', 'Мирослава', 'Надежда', 'Наталья', 'Нелли', 'Ника', 'Нина', 'Оксана', 'Олеся', 'Ольга', 'Полина', 'Регина', 'Сабина', 'Светлана', 'София', 'Стефания', 'Таисия', 'Тамара', 'Татьяна', 'Ульяна', 'Эвелина', 'Элина', 'Эльвира', 'Эльмира', 'Эмилия', 'Юлия', 'Яна', 'Ярослава']
 var wl = ['Александровна', 'Алексеевна', 'Анатольевна', 'Андреевна', 'Антоновна', 'Аркадьевна', 'Артемовна', 'Богдановна', 'Борисовна', 'Валентиновна', 'Валерьевна', 'Васильевна', 'Викторовна', 'Виталиевна', 'Владимировна', 'Владиславовна', 'Вячеславовна', 'Геннадиевна', 'Георгиевна', 'Григорьевна', 'Даниловна', 'Денисовна', 'Дмитриевна', 'Евгеньевна', 'Егоровна', 'Ефимовна', 'Ивановна', 'Игоревна', 'Ильинична', 'Иосифовна', 'Кирилловна', 'Константиновна', 'Леонидовна', 'Львовна', 'Максимовна', 'Матвеевна', 'Михайловна', 'Николаевна', 'Олеговна', 'Павловна', 'Петровна', 'Платоновна', 'Робертовна', 'Романовна', 'Семеновна', 'Сергеевна', 'Станиславовна', 'Степановна', 'Тарасовна', 'Тимофеевна', 'Федоровна', 'Феликсовна', 'Филипповна', 'Эдуардовна', 'Юрьевна', 'Яковлевна', 'Ярославовна']
 var ln = ['Александрович', 'Алексеевич', 'Анатольевич', 'Андреевич', 'Антонович', 'Аркадьевич', 'Артемович', 'Бедросович', 'Богданович', 'Борисович', 'Валентинович', 'Валерьевич', 'Васильевич', 'Викторович', 'Витальевич', 'Владимирович', 'Владиславович', 'Вольфович', 'Вячеславович', 'Геннадиевич', 'Георгиевич', 'Григорьевич', 'Данилович', 'Денисович', 'Дмитриевич', 'Евгеньевич', 'Егорович', 'Ефимович', 'Иванович', 'Иваныч', 'Игнатьевич', 'Игоревич', 'Ильич', 'Иосифович', 'Исаакович', 'Кириллович', 'Константинович', 'Леонидович', 'Львович', 'Максимович', 'Матвеевич', 'Михайлович', 'Николаевич', 'Олегович', 'Павлович', 'Палыч', 'Петрович', 'Платонович', 'Робертович', 'Романович', 'Саныч', 'Северинович', 'Семенович', 'Сергеевич', 'Станиславович', 'Степанович', 'Тарасович', 'Тимофеевич', 'Федорович', 'Феликсович', 'Филиппович', 'Эдуардович', 'Юрьевич', 'Яковлевич', 'Ярославович']
-/*
-<a class="dropdown-item" onclick="btnName(this)">койко-день</a>
-    <a class="dropdown-item" onclick="btnName(this)">Диагноз ЛОП/СОП/ТОП</a>
-    <a class="dropdown-item" onclick="btnName(this)">диагноз ОП/ИПН/СПН/ХП</a>
-    <a class="dropdown-item" onclick="btnName(this)">осложнения</a>
-    <a class="dropdown-item" onclick="btnName(this)">Вид операции</a>
-    <a class="dropdown-item" onclick="btnName(this)">сопутств.заб.</a>
-    <a class="dropdown-item" onclick="btnName(this)">этиология</a>
-    <a class="dropdown-item" onclick="btnName(this)">исход</a>
-    <a class="dropdown-item" onclick="btnName(this)">Ranson</a>
-    <a class="dropdown-item" onclick="btnName(this)">ССВР</a>
-    <a class="dropdown-item" onclick="btnName(this)">None</a>
-    <a class="dropdown-item" onclick="btnName(this)">М-APACHE II</a>
-    <a class="dropdown-item" onclick="btnName(this)">к/день в ОАРИТ</a>
-    <a class="dropdown-item" onclick="btnName(this)">№сутки в ОАРИТ</a>
-    <a class="dropdown-item" onclick="btnName(this)">нач.заб.,час</a>
-    <a class="dropdown-item" onclick="btnName(this)">тип госпитализации</a>
-    <a class="dropdown-item" onclick="btnName(this)">Сутки перевода</a>
-    <a class="dropdown-item" onclick="btnName(this)">№ госп-и</a>
-    <a class="dropdown-item" onclick="btnName(this)">ранн.опер.</a>
-    <a class="dropdown-item" onclick="btnName(this)">расп.боли</a>
-    <a class="dropdown-item" onclick="btnName(this)">нарк.анальг.</a>
-    <a class="dropdown-item" onclick="btnName(this)">мн.рвота</a>
-    <a class="dropdown-item" onclick="btnName(this)">рв.коф.гущ.</a>
-    <a class="dropdown-item" onclick="btnName(this)">BMI</a>
-    <a class="dropdown-item" onclick="btnName(this)">c-м Грея-К.</a>
-    <a class="dropdown-item" onclick="btnName(this)">Группа крови</a>
-    <a class="dropdown-item" onclick="btnName(this)">Rh</a>
-    <a class="dropdown-item" onclick="btnName(this)">ЭКГ</a>
-    <a class="dropdown-item" onclick="btnName(this)">None</a>
-    <a class="dropdown-item" onclick="btnName(this)">эффект от леч. 24 часа</a>
-    <a class="dropdown-item" onclick="btnName(this)">антибак.проф.</a>
-    <a class="dropdown-item" onclick="btnName(this)">антиферм.</a>
-    <a class="dropdown-item" onclick="btnName(this)">антисекр.преп.</a>
-    <a class="dropdown-item" onclick="btnName(this)">гемосорб.</a>
-    <a class="dropdown-item" onclick="btnName(this)">СДК</a>
-    <a class="dropdown-item" onclick="btnName(this)">нутр.подд-ка.</a>
-    <a class="dropdown-item" onclick="btnName(this)">дрен.УЗ-контр</a>
-    <a class="dropdown-item" onclick="btnName(this)">лап.(леч.)</a>
-    <a class="dropdown-item" onclick="btnName(this)">ЭПСТ</a>
-    <a class="dropdown-item" onclick="btnName(this)">ПКТ</a>
-    <a class="dropdown-item" onclick="btnName(this)">ТИАБ(диагн)</a>
-    <a class="dropdown-item" onclick="btnName(this)">миниинваз.оп.</a>
-    <a class="dropdown-item" onclick="btnName(this)">лапаротомий-всего</a>
-    <a class="dropdown-item" onclick="btnName(this)">Примечание</a>
-    <a class="dropdown-item" onclick="btnName(this)">ОЦЕНКА</a>
+/**
+ * 
+ * @param {String} cond - условие
+ * 
+ * функция определяет истинно ли условие
+ *  если условие истинное - она вернет true
+ *  если условие ложно - она вернет false
  */
+var isTrue = (cond)=>{
+  var ands = cond.match(/and|or/g) || [cond]
+  var condArray = cond.split(/and|or/g)
+  var bools = [];
+  while(condArray.length>0){
+      o = condArray.pop().match(/==|>=|<=|>|<|!=/);
+      ad = o.input.substr(0,o.index)
+      dnum = ad.split('][')[1].substr(0,ad.split('][')[1].indexOf(']'))
+      period = ad.split('][')[0][1];//индекс периода
+      param = o.input.substr(o.index+2).replace(/"/g,'');
+      if(period==0){
+          if(pdata[dnum] == '' || pdata[dnum] == undefined) return false;
+          if(o[0]=='=='){
+              if(pdata[dnum].replace(/\s+/g, '') == param) bools.push(true)
+              else bools.push(false)
+              continue
+          }else if(o[0]=='>'){
+              if(pdata[dnum].replace(/\s+/g, '') >  param) bools.push(true)
+              else bools.push(false)
+              continue
+          }else if(o[0]=='<'){
+              if(pdata[dnum].replace(/\s+/g, '') < param) bools.push(true)
+              else bools.push(false)
+              continue
+          }else if(o[0]=='>='){
+              if(pdata[dnum].replace(/\s+/g, '') >= param) bools.push(true)
+              else bools.push(false)
+              continue
+          }else if(o[0]=='<='){
+              if(pdata[dnum].replace(/\s+/g, '') <= param) bools.push(true)
+              else bools.push(false)
+              continue
+          }else if(o[0]=='!='){
+              if(pdata[dnum].replace(/\s+/g, '') != param) bools.push(true)
+              else bools.push(false)
+              continue                                
+          }
+      }else{
+          if(pdata['p'+(period-1)][dnum] == '' || pdata['p'+(period-1)][dnum] == undefined) return false;
+          if(o[0]=='=='){
+              if(pdata['p'+(period-1)][dnum].replace(/\s+/g, '') == param) bools.push(true)
+              else bools.push(false)
+              continue
+          }else if(o[0]=='>'){
+              if(pdata['p'+(period-1)][dnum].replace(/\s+/g, '') >  param) bools.push(true)
+              else bools.push(false)
+              continue
+          }else if(o[0]=='<'){
+              if(pdata['p'+(period-1)][dnum].replace(/\s+/g, '') < param) bools.push(true)
+              else bools.push(false)
+              continue
+          }else if(o[0]=='>='){
+              if(pdata['p'+(period-1)][dnum].replace(/\s+/g, '') >= param) bools.push(true)
+              else bools.push(false)
+              continue
+          }else if(o[0]=='<='){
+              if(pdata['p'+(period-1)][dnum].replace(/\s+/g, '') <= param) bools.push(true)
+              else bools.push(false)
+              continue
+          }else if(o[0]=='!='){
+              if(pdata['p'+(period-1)][dnum].replace(/\s+/g, '') != param) bools.push(true)
+              else bools.push(false)
+              continue                                
+          }
+      }
+  }
+  while(bools.length>=1){
+      if(bools.length==1){
+          return bools[0];
+      }
+      for(var and of ands){
+          var index = ands.indexOf(and)
+          and = ands.splice(index, 1)[0]
+          if(and=='and'){
+              if(bools[index] && bools[index+1]) bools.splice(index+1, 1)
+              else bools.splice(index, 2, false)
+          }else if(ands.indexOf('and') == -1 && and=='or'){
+              if(bools[index] || bools[index+1]) bools.splice(index+1, 1)
+              else bools.splice(index, 2, false)
+          }
+      }
+  }
+}
 
-
-/*
-<a class="dropdown-item" onclick="btnName(this)">темп.тела</a>
-<a class="dropdown-item" onclick="btnName(this)">част.пульса</a>
-<a class="dropdown-item" onclick="btnName(this)">АДсист.</a>
-<a class="dropdown-item" onclick="btnName(this)">вазопресс.</a>
-<a class="dropdown-item" onclick="btnName(this)">част. дых.</a>
-<a class="dropdown-item" onclick="btnName(this)">сатурация</a>
-<a class="dropdown-item" onclick="btnName(this)">ИВЛ</a>
-<a class="dropdown-item" onclick="btnName(this)">диурез,мл</a>
-<a class="dropdown-item" onclick="btnName(this)">сознание</a>
-<a class="dropdown-item" onclick="btnName(this)">зонд,мл</a>
-<a class="dropdown-item" onclick="btnName(this)">вздутие ж.</a>
-<a class="dropdown-item" onclick="btnName(this)">ОЖО или св.ж.</a>
-<a class="dropdown-item" onclick="btnName(this)">ЦВД,мм вод.</a>
-<a class="dropdown-item" onclick="btnName(this)">лапарос.диагн.</a>
-<a class="dropdown-item" onclick="btnName(this)">ЭФГДС</a>
-<a class="dropdown-item" onclick="btnName(this)">УЗИ</a>
-<a class="dropdown-item" onclick="btnName(this)">КТ</a>
-<a class="dropdown-item" onclick="btnName(this)">посев крови</a>
-<a class="dropdown-item" onclick="btnName(this)">посев ОЖО</a>
-<a class="dropdown-item" onclick="btnName(this)">имм.статус</a>
-<a class="dropdown-item" onclick="btnName(this)">эритр.</a>
-<a class="dropdown-item" onclick="btnName(this)">Hb</a>
-<a class="dropdown-item" onclick="btnName(this)">Ht</a>
-<a class="dropdown-item" onclick="btnName(this)">СОЭ</a>
-<a class="dropdown-item" onclick="btnName(this)">лейк.</a>
-<a class="dropdown-item" onclick="btnName(this)">тромбоциты, кол-во</a>
-<a class="dropdown-item" onclick="btnName(this)">тромбоциты, объем</a>
-<a class="dropdown-item" onclick="btnName(this)">п/ядерн.</a>
-<a class="dropdown-item" onclick="btnName(this)">лимфоциты</a>
-<a class="dropdown-item" onclick="btnName(this)">нейтрофилы</a>
-<a class="dropdown-item" onclick="btnName(this)">ЛИИ</a>
-<a class="dropdown-item" onclick="btnName(this)">глюкоза</a>
-<a class="dropdown-item" onclick="btnName(this)">белок</a>
-<a class="dropdown-item" onclick="btnName(this)">АлАТ</a>
-<a class="dropdown-item" onclick="btnName(this)">АсАТ,</a>
-<a class="dropdown-item" onclick="btnName(this)">билир.</a>
-<a class="dropdown-item" onclick="btnName(this)">ЩФ</a>
-<a class="dropdown-item" onclick="btnName(this)">ГГТП</a>
-<a class="dropdown-item" onclick="btnName(this)">мочевина</a>
-<a class="dropdown-item" onclick="btnName(this)">креатинин</a>
-<a class="dropdown-item" onclick="btnName(this)">амилаза мочи</a>
-<a class="dropdown-item" onclick="btnName(this)">амилаза крови</a>
-<a class="dropdown-item" onclick="btnName(this)">кальций</a>
-<a class="dropdown-item" onclick="btnName(this)">ЛДГ</a>
-<a class="dropdown-item" onclick="btnName(this)">СРБ</a>
-<a class="dropdown-item" onclick="btnName(this)">рН</a>
-<a class="dropdown-item" onclick="btnName(this)">рСО2</a>
-<a class="dropdown-item" onclick="btnName(this)">рО2</a>
-<a class="dropdown-item" onclick="btnName(this)">НСО3</a>
-<a class="dropdown-item" onclick="btnName(this)">tCO2</a>
-<a class="dropdown-item" onclick="btnName(this)">ABE</a>
-<a class="dropdown-item" onclick="btnName(this)">SO2</a>
-<a class="dropdown-item" onclick="btnName(this)">АЧТВ</a>
-<a class="dropdown-item" onclick="btnName(this)">ПИ</a>
-<a class="dropdown-item" onclick="btnName(this)">МНО</a>
-<a class="dropdown-item" onclick="btnName(this)">PROMISE</a>
- */

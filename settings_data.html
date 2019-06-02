@@ -53,30 +53,44 @@
         <div class="params">
             <h3 style="text-align: center">Размер фигуры</h3>
             <div>
-                <textarea id="size" class='col' rows='1' style="overflow:hidden" onkeypress="getChar(event)"></textarea>
+                <textarea autocomplete="on" style="font-size: 1.3rem;" id="size" class='col' rows='1' style="overflow:hidden"></textarea>
             </div>
         </div>
         <div class="params">
             <h3 style="text-align: center">Форма фигуры</h3>
             <div>
-                <textarea id="shape" class='col' rows='1' style="overflow:hidden" onkeypress="getChar(event)"></textarea>
+                <textarea style="font-size: 1.3rem;" id="shape" class='col' rows='1' style="overflow:hidden"></textarea>
             </div>
         </div>
         <div class="params">
             <h3 style="text-align: center">Цвет фигуры</h3>
             <div>
-                <textarea id="color" class='col' rows='1' style="overflow:hidden" onkeypress="getChar(event)"></textarea>
+                <textarea style="font-size: 1.3rem;" id="color" class='col' rows='1' style="overflow:hidden"></textarea>
             </div>
         </div>
         <div class="params">
             <h3 style="text-align: center">Описание</h3>
             <div>
-                <textarea id="description" class='col' rows='1' style="overflow:hidden" onkeypress="getChar(event)"></textarea>
+                <textarea style="font-size: 1.3rem;" id="description" class='col' rows='1' style="overflow:hidden"></textarea>
             </div>
         </div>
         <div>
             <button type="button" id="save" class="btn btn-primary col mb-3">Сохранить</button>
         </div>
+    </div>
+    <div class="row">
+        <ul id="pparams" style="list-style-type:none;">
+            <h5>Значения периодов:</h5>
+            <input type="text" class="form-control p-2 searchInput rounded" onkeyup="listFilterFunction(this)" placeholder="Search..">
+        </ul>
+        <ul id="gparams" style="list-style-type:none;">
+            <h5>Общие значения:</h5>
+            <input type="text" class="form-control p-2 searchInput rounded" onkeyup="listFilterFunction(this)" placeholder="Search..">
+        </ul>
+        <ul id="periods" style="list-style-type:none;">
+            <h5>Периоды:</h5>
+            <input type="text" class="form-control p-2 searchInput rounded" onkeyup="listFilterFunction(this)" placeholder="Search..">
+        </ul>
     </div>
   </div>
   <script>
@@ -95,6 +109,24 @@
                 document.getElementById('description').value = e['p'+periodIndex][row].description!=undefined?e['p'+periodIndex][row].description:'';;
             }
         }
+        for(var i of periodInformationArray){
+          var l = document.getElementById('pparams').appendChild(document.createElement('li'))
+          l.textContent = i + ' - ' + periodInformationArray.indexOf(i)
+          l.hidden = true
+        }
+        for(var i of generalInformationArray){
+          var l = document.getElementById('gparams').appendChild(document.createElement('li'))
+          l.textContent = i + ' - ' + generalInformationArray.indexOf(i)
+          l.hidden = true
+        }
+        for(var i of periods){
+          var l = document.getElementById('periods').appendChild(document.createElement('li'))
+          l.textContent = i + ' - ' + periods.indexOf(i)
+          l.hidden = true
+        }
+        Array.from(document.getElementsByTagName('textarea')).map(v=>{
+          v.setAttribute('rows',v.value.split('\n').length)
+        })
         document.getElementById('type').value = e.name;
         document.getElementById('period').value = periods[periodIndex]
     }
@@ -115,27 +147,36 @@
             'shape':document.getElementById('shape').value,
             'color':document.getElementById('color').value,
             'description':document.getElementById('description').value,
+            'ps':Array.from(document.getElementsByTagName('textarea')).map(v=>{
+              a = v.value.split('][').map((v,i,a)=>{
+                if(i==0) return;
+                if(a[i-1].substr(a[i-1].lastIndexOf('[')+1) == '0') return v.substr(0,a[i].indexOf(']'))
+              })
+              a = a.filter(Boolean)
+              na = [];
+              a.map(v=>{if(na.indexOf(v)==-1)na.push(v)})
+              return na;
+            }).flat(1),
+            'gs':Array.from(document.getElementsByTagName('textarea')).map(v=>{
+              a = v.value.split('][').map((v,i,a)=>{
+                if(i==0) return;
+                if(a[i-1].substr(a[i-1].lastIndexOf('[')+1) != '0') return v.substr(0,a[i].indexOf(']'))
+              })
+              a = a.filter(Boolean)
+              na = [];
+              a.map(v=>{if(na.indexOf(v)==-1)na.push(v)})
+              return na;
+            }).flat(1),
         }
         toggleStore();
         add(data)
         toggleStore();
     })
-    function getChar(event) {
-        if (event.which == null) { // IE
-            if (event.keyCode == 13){
-                event.path[0].setAttribute('rows',Number(event.path[0].getAttribute('rows'))+1)
-            }else if(event.keyCode == 8){
-                delRow(event);
-            }
-        }
-        if (event.which != 0 && event.charCode != 0) { // все кроме IE
-            if (event.which == 13){
-                event.path[0].setAttribute('rows',Number(event.path[0].getAttribute('rows'))+1)
-            }else if(event.which == 8){
-                delRow(event);
-            }
-        }
-    }
+    Array.from(document.getElementsByTagName('textarea')).map(v=>{
+      v.oninput = function(event) {
+        event.path[0].setAttribute('rows',event.srcElement.value.split('\n').length)
+      };
+    })
   </script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

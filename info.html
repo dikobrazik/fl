@@ -46,7 +46,8 @@
                     <div class="col"></div>
                     <div class="col"></div>
                     <div class="col">
-                        <a onclick="importJSON()" class="btn btn-primary text-white m-2 col-6">Import</a>           
+                        <a onclick="importJSON()" class="btn btn-primary text-white m-2 col-5">Import</a>           
+                        <a id="export" target="_blank" class="btn btn-info text-white m-2 col-5" download="1.json">Export</a>                               
                     </div>
                 </div>
             </div>
@@ -54,6 +55,7 @@
             var data = [];
             const upd = function(){
                 var a = (e) =>{
+                    downloadFile(JSON.stringify(e), '1.json', document.getElementById('export'))
                     data = e;
                     document.querySelector('body > table > tbody').innerHTML = '';
                     for(var i = 0; i < e.length; i++){
