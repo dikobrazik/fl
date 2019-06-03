@@ -121,8 +121,8 @@
                 data.circles = []
                 for(var i in res){
                     if(!isNaN(i[1])&&i[0]=='p' || i=='surname'){//if(!isNaN(i.split('')[1])&&i.split('')[0]=='p' || i=='surname')
-                        index = i[1];
-                        if(index=='u') index = 0
+                        index = Number(i[1])+1;
+                        if(i=='surname') index = 0
                         data.circles.push({
                             name: periods[index],
                             qr:[
@@ -175,6 +175,11 @@
                 while(conditions.length>0 && i!= 10){
                     pos = s(conditions)
                     cond = conditions.substr(0,pos.pos)
+                    if(cond.indexOf('else{')!=-1 && !pos.isHave) {
+                        pos = s(cond)
+                        cond = conditions.substr(0,pos.pos)
+                        return cond.split(/\(|\)/)[1]
+                    }
                     cond = cond.substr(cond.indexOf('(')+1, cond.indexOf(')')-cond.indexOf('(')-1)
                     isT = isTrue(cond)
                     if(isT) conditions = conditions.substr(conditions.indexOf('{')+1, conditions.indexOf('}')-conditions.indexOf('{')-1)
@@ -185,53 +190,48 @@
                 return 0;
             }
             var c = (e)=>{
+                var copy = Object.assign({}, data);
+                console.log(copy)
                 var s = Array.from(document.getElementsByTagName('tbody')[0].getElementsByTagName('td')).filter(v=>{
-                        if(v.getElementsByTagName('input')[0].hasAttribute('checked')) return 1;
-                    })
-                if(!e.getElementsByTagName('input')[0].hasAttribute('checked')){
-                    var d = vdata.filter(v=>v.name==e.getElementsByTagName('h5')[0].textContent)[0]
-                    if(s.length<9){
-                        e.style.backgroundColor = '#0f02'
-                        e.getElementsByTagName('input')[0].toggleAttribute('checked');
-                        data.names.splice(e.getElementsByTagName('input')[0].id,0,e.getElementsByTagName('h5')[0].textContent)
-                        for(var circle of data.circles){
-                            index = data.circles.indexOf(circle);
-                            if(d['p'+index]!=undefined){
-                                if(d['p'+index].length>0){
-                                    for(var k = 0; k < d['p'+index].length; k++){
-                                        console.log(d['p'+index][k])
-                                        circle.qr[e.getElementsByTagName('input')[0].id].push({
-                                            n:getCondition(d['p'+index][k].shape),
-                                            size:getCondition(d['p'+index][k].size),
-                                            color:getCondition(d['p'+index][k].color),
-                                            hint:d['p'+index][k].description,
-                                        })
-                                    }
-                                }
-                            }
-                            // circle.qr[e.getElementsByTagName('input')[0].id] = []
+                    if(v.getElementsByTagName('input')[0].hasAttribute('checked')) return 1;
+                })
+                var d = vdata.filter(v=>v.name==e.getElementsByTagName('h5')[0].textContent)[0]
+                if(!e.getElementsByTagName('input')[0].hasAttribute('checked')){//check
+                    if(s.length>8) return
+                    e.style.backgroundColor = '#0f02'
+                    e.getElementsByTagName('input')[0].toggleAttribute('checked');
+                    data.names.splice(e.getElementsByTagName('input')[0].id,0,e.getElementsByTagName('h5')[0].textContent)
+                    for(var circle of data.circles){
+                        pindex = 'p' + data.circles.indexOf(circle);
+                        if(d[pindex]!= undefined)circle.qr.splice(e.getElementsByTagName('input')[0].id,0,[])
+                        if(d[pindex]==undefined) continue
+                        if(d[pindex].length==0) continue
+                        for(var k = 0; k < d[pindex].length; k++){
+                            circle.qr[e.getElementsByTagName('input')[0].id].push({
+                                n:getCondition(d[pindex][k].shape),
+                                size:getCondition(d[pindex][k].size),
+                                color:getCondition(d[pindex][k].color),
+                                hint:d[pindex][k].description,
+                            })
                         }
-                        // data.circles.splice(e.getElementsByTagName('input')[0].id,0,e.getElementsByTagName('h5')[0].textContent)
-                        data.parts++;
-                    } 
-                }else{
+                    }
+                    data.parts++;
+                }else{//uncheck
                     if(s.length<3) return 
                     e.style.backgroundColor = '#f002'
                     e.getElementsByTagName('input')[0].toggleAttribute('checked');
                     var index = data.names.indexOf(e.getElementsByTagName('h5')[0].textContent);
                     for(var circle of data.circles){
-                        // console.log(circle.qr[e.getElementsByTagName('input')[0].id])
-                        if(circle.qr[e.getElementsByTagName('input')[0].id] != undefined){
-                            if(circle.qr[e.getElementsByTagName('input')[0].id].length >0){ 
-                                circle.qr[e.getElementsByTagName('input')[0].id] = []
-                            }
-                        }
-                        
+                        pindex = 'p' + data.circles.indexOf(circle);
+                        if(d[pindex]==undefined) continue
+                            circle.qr.splice(e.getElementsByTagName('input')[0].id, 1)
                     }
                     if (index !== -1) data.names.splice(index, 1);
                     data.parts--;
                 }
-                init(true)
+                var copy = Object.assign({}, data);
+                console.log(copy)
+                init()
             }
             
             var e = (paramData) => {
@@ -526,7 +526,7 @@
                     ctx.arc(w/2,h/2,circles[i],0 * Math.PI, 2 * Math.PI)
                     ctx.stroke();
                 }
-                if(editCircles) return init(false);
+                if(editCircles) return init();
             }
             function addTable(s){
                 if(document.getElementById('htable') != undefined) document.getElementById('htable').remove()
