@@ -59,6 +59,31 @@
                         user-select: none; /* Non-prefixed version, currently
                                             supported by Chrome and Opera */
             }
+            .lds-dual-ring {
+                display: inline-block;
+                width: 64px;
+                height: 64px;
+                
+            }
+            .lds-dual-ring:after {
+                content: " ";
+                display: block;
+                width: 46px;
+                height: 46px;
+                margin: 1px;
+                border-radius: 50%;
+                border: 5px solid #cef;
+                border-color: #cef transparent #cef transparent;
+                animation: lds-dual-ring 1.2s linear infinite;
+            }
+            @keyframes lds-dual-ring {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
         </style>
         <script src="js/scripts.js"></script>
     </head>
@@ -113,6 +138,9 @@
         </div> -->
         <script type="text/javascript" src="data.js"></script>
         <script>
+            document.querySelector('div#container').style.opacity = 0;
+
+            var show = false;
             var periods = ['Общий','24 часа', '24-48 часов', '3 сутки','4-7 сутки','12-15 сутки','16-30 сутки','Выписка'] 
             var timerId;
             var pdata,vdata;
@@ -120,7 +148,7 @@
                 pdata = res;
                 data.circles = []
                 for(var i in res){
-                    if(!isNaN(i[1])&&i[0]=='p' || i=='surname'){//if(!isNaN(i.split('')[1])&&i.split('')[0]=='p' || i=='surname')
+                    if(!isNaN(i[1])&&i[0]=='p' || i=='surname'){
                         index = Number(i[1])+1;
                         if(i=='surname') index = 0
                         data.circles.push({
@@ -145,10 +173,19 @@
                 name.textContent = 'Дата поступления: '+res.date.split('-')[2]+'.'+res.date.split('-')[1]+'.'+res.date.split('-')[0];
                 topOffset = document.getElementById('myCanvas').offsetTop;
                 timerId = setInterval(function() {
-                    if(data.names[0]!='Lorem ipsum dolor sit amet.' || data.names[0]!=''){
+                    if(show){// if(data.names[0]!='Lorem ipsum dolor sit amet.' || data.names[0]!=''){
                         init(true)
+                        animate({
+                            duration: 2000,
+                            timing: function(timeFraction) {
+                                return timeFraction;
+                            },
+                            draw: function(progress) {
+                                document.querySelector('div#container').style.opacity = Number(document.querySelector('div#container').style.opacity)+progress;
+                            }
+                        });
                     }
-                }, 100);
+                }, 10);
             }
             var getCondition = function(param){
                 var s = (cond)=>{
@@ -190,8 +227,6 @@
                 return 0;
             }
             var c = (e)=>{
-                var copy = Object.assign({}, data);
-                console.log(copy)
                 var s = Array.from(document.getElementsByTagName('tbody')[0].getElementsByTagName('td')).filter(v=>{
                     if(v.getElementsByTagName('input')[0].hasAttribute('checked')) return 1;
                 })
@@ -203,7 +238,8 @@
                     data.names.splice(e.getElementsByTagName('input')[0].id,0,e.getElementsByTagName('h5')[0].textContent)
                     for(var circle of data.circles){
                         pindex = 'p' + data.circles.indexOf(circle);
-                        if(d[pindex]!= undefined)circle.qr.splice(e.getElementsByTagName('input')[0].id,0,[])
+                        if(circle.qr.length == 0 && d[pindex]==undefined) continue
+                        circle.qr.splice(e.getElementsByTagName('input')[0].id,0,[])
                         if(d[pindex]==undefined) continue
                         if(d[pindex].length==0) continue
                         for(var k = 0; k < d[pindex].length; k++){
@@ -223,14 +259,15 @@
                     var index = data.names.indexOf(e.getElementsByTagName('h5')[0].textContent);
                     for(var circle of data.circles){
                         pindex = 'p' + data.circles.indexOf(circle);
-                        if(d[pindex]==undefined) continue
-                            circle.qr.splice(e.getElementsByTagName('input')[0].id, 1)
+                        for(var i = 0; i < circle.qr.length; i++){
+                            if(i==e.getElementsByTagName('input')[0].id){
+                                circle.qr.splice(i,1)
+                            }
+                        }
                     }
-                    if (index !== -1) data.names.splice(index, 1);
+                    if (index != -1) data.names.splice(index, 1);
                     data.parts--;
                 }
-                var copy = Object.assign({}, data);
-                console.log(copy)
                 init()
             }
             
@@ -249,6 +286,7 @@
                         })
                     }
                 }
+                show = true;
             }
             var b = (res) =>{
                 vdata = res;
