@@ -189,23 +189,30 @@
             }
             var getCondition = function(param){
                 var s = (cond)=>{
-                    var stack = [];
-                    stack.push(cond.match(/{/)[0])
-                    var pos = cond.match(/{/).index+1;
-                    var i = 0;
-                    while(stack.length!=0 && i!=100){
-                        if(cond.substr(pos).match(/{|}/)[0] == '{'){
-                            stack.push('{')
-                            pos += cond.substr(pos).match(/{|}/).index+1
-                        } 
-                        else if(cond.substr(pos).match(/{|}/)[0] == '}'){
-                            stack.pop()
-                            pos += cond.substr(pos).match(/{|}/).index+1
+                    if(cond.match(/{/) == null){
+                        if(cond.indexOf('set')!=-1){
+                            return {pos:cond.length, isHave:false}
                         }
-                        i++;
+                    }else{
+                        var stack = [];
+                        stack.push(cond.match(/{/)[0])
+                        var pos = cond.match(/{/).index+1;
+                        var i = 0;
+                        while(stack.length!=0 && i!=100){
+                            if(cond.substr(pos).match(/{|}/)[0] == '{'){
+                                stack.push('{')
+                                pos += cond.substr(pos).match(/{|}/).index+1
+                            } 
+                            else if(cond.substr(pos).match(/{|}/)[0] == '}'){
+                                stack.pop()
+                                pos += cond.substr(pos).match(/{|}/).index+1
+                            }
+                            i++;
+                        }
+                        //pos - индекс закрывющей фигурной скобки ("}")
+                        if(i>1) return {pos:pos, isHave:true};//isHave - имеются вложенные условия
+                        else return {pos:pos, isHave:false};
                     }
-                    if(i>1) return {pos:pos, isHave:true};//isHave - имеются вложенные условия
-                    else return {pos:pos, isHave:false};
                 }
                 var conditions = param.replace(/\s+/gi, '')//.split(/if|elseif|else/g).slice(1);
                 var i = 0;
@@ -217,8 +224,11 @@
                         cond = conditions.substr(0,pos.pos)
                         return cond.split(/\(|\)/)[1]
                     }
+                    console.log('nelol')
+                    if(!pos.isHave && cond.indexOf('{')==-1 && cond.indexOf('}')==-1) return conditions.split(/\(|\)/)[1]
+                    console.log('lol')
                     cond = cond.substr(cond.indexOf('(')+1, cond.indexOf(')')-cond.indexOf('(')-1)
-                    isT = isTrue(cond)
+                    isT = isTrue(cond) // проверка условия блока
                     if(isT) conditions = conditions.substr(conditions.indexOf('{')+1, conditions.indexOf('}')-conditions.indexOf('{')-1)
                     else conditions = conditions.substr(pos.pos)
                     if(!pos.isHave && isT) return conditions.split(/\(|\)/)[1]
