@@ -176,7 +176,7 @@
                     if(show){// if(data.names[0]!='Lorem ipsum dolor sit amet.' || data.names[0]!=''){
                         init(true)
                         animate({
-                            duration: 2000,
+                            duration: 5000,
                             timing: function(timeFraction) {
                                 return timeFraction;
                             },
@@ -224,9 +224,7 @@
                         cond = conditions.substr(0,pos.pos)
                         return cond.split(/\(|\)/)[1]
                     }
-                    console.log('nelol')
                     if(!pos.isHave && cond.indexOf('{')==-1 && cond.indexOf('}')==-1) return conditions.split(/\(|\)/)[1]
-                    console.log('lol')
                     cond = cond.substr(cond.indexOf('(')+1, cond.indexOf(')')-cond.indexOf('(')-1)
                     isT = isTrue(cond) // проверка условия блока
                     if(isT) conditions = conditions.substr(conditions.indexOf('{')+1, conditions.indexOf('}')-conditions.indexOf('{')-1)
@@ -243,7 +241,7 @@
                 var d = vdata.filter(v=>v.name==e.getElementsByTagName('h5')[0].textContent)[0]
                 if(!e.getElementsByTagName('input')[0].hasAttribute('checked')){//check
                     if(s.length>8) return
-                    e.style.backgroundColor = '#0f02'
+                    e.style.backgroundColor = '#0f07'
                     e.getElementsByTagName('input')[0].toggleAttribute('checked');
                     data.names.splice(e.getElementsByTagName('input')[0].id,0,e.getElementsByTagName('h5')[0].textContent)
                     for(var circle of data.circles){
@@ -264,7 +262,7 @@
                     data.parts++;
                 }else{//uncheck
                     if(s.length<3) return 
-                    e.style.backgroundColor = '#f002'
+                    e.style.backgroundColor = '#f007'
                     e.getElementsByTagName('input')[0].toggleAttribute('checked');
                     var index = data.names.indexOf(e.getElementsByTagName('h5')[0].textContent);
                     for(var circle of data.circles){
@@ -341,13 +339,18 @@
                 for(var i = 0; i<res.length; i++){
                     if(i<9) e(res[i]);
                     var d = document.getElementsByTagName('tbody')[0].appendChild(document.createElement('tr'))
-                    d.innerHTML = `<td class="rounded-lg" align="center" onclick="c(this)"  ${i<9?'style="background-color:#0f02"':'style="background-color:#f002"'}>
-                        <input type="checkbox" ${i<9?'checked':''} class="mr-1" id="${i}"  style="width: 20px; height: 20px;">
+                    d.innerHTML = `<td class="rounded-lg" align="center" onclick="c(this)"  ${i<9?'style="background-color:#0f07"':'style="background-color:#f007"'}>
+                        <input type="checkbox" ${i<9?'checked':''} class="mr-1" id="${i}" onchange="checkboxEventListener(this)" style="width: 20px; height: 20px;">
                         <h5 style="display: inline-block;">${res[i].name}</h5>
                         </td>`
                 }
             }
             
+            function checkboxEventListener(e){
+                e.toggleAttribute('checked')
+                c(e.parentElement)
+            }
+
             const getContext = () => document.getElementById('myCanvas').getContext('2d');
             
             var scale = 1;

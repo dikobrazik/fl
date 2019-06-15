@@ -166,10 +166,23 @@
                                 iData[k].date = iData[k][0].split(' ')[0]
                                 iData[k].dob = String(iData[k][0].split('-')[0] - iData[k][2]) + '-' + m + '-' + d
                             }
-                            add(iData[k])
-                        }
+                        }    
+                        connectDB( function(db){
+                            i=0;
+                            var transaction = db.transaction(storeName, "readwrite");
+                            var itemStore = transaction.objectStore(storeName);
+                            putNext();
+
+                            function putNext() {
+                                if (i<iData.length) {
+                                    itemStore.put(iData[i]).onsuccess = putNext;
+                                    ++i;
+                                } else {
+                                    document.location.reload()
+                                }
+                            }  
+                        });
                     } 
-                    setTimeout(()=>document.location.reload(), 5000)
                 };
                 xhr.send(null);
             }

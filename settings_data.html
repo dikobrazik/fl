@@ -140,33 +140,38 @@
     }
     document.getElementById('save').addEventListener('click', ()=>{
         name = document.getElementById('name').value
-        data['p' + periodIndex] = []
-        data['p' + periodIndex][0] = {
+        addedData = {
             'name':name,
             'size':document.getElementById('size').value,
             'shape':document.getElementById('shape').value,
             'color':document.getElementById('color').value,
             'description':document.getElementById('description').value,
             'ps':Array.from(document.getElementsByTagName('textarea')).map(v=>{
-              a = v.value.split('][').map((v,i,a)=>{
-                if(i==0) return;
-                if(a[i-1].substr(a[i-1].lastIndexOf('[')+1) == '0') return v.substr(0,a[i].indexOf(']'))
-              })
-              a = a.filter(Boolean)
-              na = [];
-              a.map(v=>{if(na.indexOf(v)==-1)na.push(v)})
-              return na;
+                a = v.value.split('][').map((v,i,a)=>{
+                    if(i==0) return;
+                    if(a[i-1].substr(a[i-1].lastIndexOf('[')+1) == '0') return v.substr(0,a[i].indexOf(']'))
+                })
+                a = a.filter(Boolean)
+                na = [];
+                a.map(v=>{if(na.indexOf(v)==-1)na.push(v)})
+                return na;
             }).flat(1),
-            'gs':Array.from(document.getElementsByTagName('textarea')).map(v=>{
-              a = v.value.split('][').map((v,i,a)=>{
-                if(i==0) return;
-                if(a[i-1].substr(a[i-1].lastIndexOf('[')+1) != '0') return v.substr(0,a[i].indexOf(']'))
-              })
-              a = a.filter(Boolean)
-              na = [];
-              a.map(v=>{if(na.indexOf(v)==-1)na.push(v)})
-              return na;
+                'gs':Array.from(document.getElementsByTagName('textarea')).map(v=>{
+                a = v.value.split('][').map((v,i,a)=>{
+                    if(i==0) return;
+                    if(a[i-1].substr(a[i-1].lastIndexOf('[')+1) != '0') return v.substr(0,a[i].indexOf(']'))
+                })
+                a = a.filter(Boolean)
+                na = [];
+                a.map(v=>{if(na.indexOf(v)==-1)na.push(v)})
+                return na;
             }).flat(1),
+        }
+        if(data['p' + periodIndex] == undefined) data['p' + periodIndex] = []
+        if(data['p' + periodIndex][row]==undefined){
+            data['p' + periodIndex].push(addedData)
+        }else{
+            data['p' + periodIndex][row] = addedData
         }
         toggleStore();
         add(data)

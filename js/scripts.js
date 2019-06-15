@@ -67,9 +67,11 @@ function list(f){
 	});
 }
 function add(data){
+    console.log(data)
     connectDB( function(db){
     var request = db.transaction([storeName], "readwrite").objectStore(storeName).put(data);
-		request.onsuccess = function(){
+		request.onsuccess = function(e){
+            console.log('added')
 			id = request.result;
 		}
 	});
@@ -184,91 +186,122 @@ var ln = ['Александрович', 'Алексеевич', 'Анатоль�
  *  если условие ложно - она вернет false
  */
 var isTrue = (cond)=>{
-  var ands = cond.match(/and|or/g) || [cond]
-  var condArray = cond.split(/and|or/g)
-  var bools = [];
-  while(condArray.length>0){
-      o = condArray.pop().match(/==|>=|<=|>|<|!=/);
-      ad = o.input.substr(0,o.index)
-      dnum = ad.split('][')[1].substr(0,ad.split('][')[1].indexOf(']'))
-      period = ad.split('][')[0].substr(1);//название периода
-      // periods.map(v=>{
-      //   if(v.replace(/\s+/g) == period) period
-      // })
-      period = ['Общий','24часа', '24-48часов', '3сутки','4-7сутки','12-15сутки','16-30сутки','Выписка'].indexOf(period);
-      param = o.input.substr(o.index+2).replace(/"/g,'');
-      if(period==0){
-          dnum = generalInformationArray.map(v=>v.replace(/\s+/gi, '')).indexOf(dnum)
-          if(pdata[dnum] == '' || pdata[dnum] == undefined) return false;
-          if(o[0]=='=='){
-              if(pdata[dnum].replace(/\s+/g, '') == param) bools.push(true)
-              else bools.push(false)
-              continue
-          }else if(o[0]=='>'){
-              if(pdata[dnum].replace(/\s+/g, '') >  param) bools.push(true)
-              else bools.push(false)
-              continue
-          }else if(o[0]=='<'){
-              if(pdata[dnum].replace(/\s+/g, '') < param) bools.push(true)
-              else bools.push(false)
-              continue
-          }else if(o[0]=='>='){
-              if(pdata[dnum].replace(/\s+/g, '') >= param) bools.push(true)
-              else bools.push(false)
-              continue
-          }else if(o[0]=='<='){
-              if(pdata[dnum].replace(/\s+/g, '') <= param) bools.push(true)
-              else bools.push(false)
-              continue
-          }else if(o[0]=='!='){
-              if(pdata[dnum].replace(/\s+/g, '') != param) bools.push(true)
-              else bools.push(false)
-              continue                                
-          }
-      }else{
-          dnum = periodInformationArray.map(v=>v.replace(/\s+/gi, '')).indexOf(dnum)
-          if(pdata['p'+(period)][dnum] == '' || pdata['p'+(period)][dnum] == undefined) return false;
-          if(o[0]=='=='){
-              if(pdata['p'+(period)][dnum].replace(/\s+/g, '') == param) bools.push(true)
-              else bools.push(false)
-              continue
-          }else if(o[0]=='>'){
-              if(pdata['p'+(period)][dnum].replace(/\s+/g, '') >  param) bools.push(true)
-              else bools.push(false)
-              continue
-          }else if(o[0]=='<'){
-              if(pdata['p'+(period)][dnum].replace(/\s+/g, '') < param) bools.push(true)
-              else bools.push(false)
-              continue
-          }else if(o[0]=='>='){
-              if(pdata['p'+(period)][dnum].replace(/\s+/g, '') >= param) bools.push(true)
-              else bools.push(false)
-              continue
-          }else if(o[0]=='<='){
-              if(pdata['p'+(period)][dnum].replace(/\s+/g, '') <= param) bools.push(true)
-              else bools.push(false)
-              continue
-          }else if(o[0]=='!='){
-              if(pdata['p'+(period)][dnum].replace(/\s+/g, '') != param) bools.push(true)
-              else bools.push(false)
-              continue                                
-          }
-      }
-  }
-  while(bools.length>=1){
-      if(bools.length==1){
-          return bools[0];
-      }
-      for(var and of ands){
-          var index = ands.indexOf(and)
-          and = ands.splice(index, 1)[0]
-          if(and=='and'){
-              if(bools[index] && bools[index+1]) bools.splice(index+1, 1)
-              else bools.splice(index, 2, false)
-          }else if(ands.indexOf('and') == -1 && and=='or'){
-              if(bools[index] || bools[index+1]) bools.splice(index+1, 1)
-              else bools.splice(index, 2, false)
-          }
-      }
-  }
+    var ands = cond.match(/and(?=\[)|or(?=\[)/g) || [cond]
+    var condArray = cond.split(/and(?=\[)|or(?=\[)/g)
+    var bools = [];
+    while(condArray.length>0){
+        o = condArray.pop().match(/==|>=|<=|>|<|!=/);
+        ad = o.input.substr(0,o.index)
+        dnum = ad.split('][')[1].substr(0,ad.split('][')[1].indexOf(']'))
+        period = ad.split('][')[0].substr(1);//название периода
+        period = ['Общий','24часа', '24-48часов', '3сутки','4-7сутки','12-15сутки','16-30сутки','Выписка'].indexOf(period);
+        param = o.input.substr(o.index+2).replace(/"/g,'');
+        if(period==0){
+            if(ad.split('][').length > 2) {
+                console.log(ad)
+            }else{
+                dnum = generalInformationArray.map(v=>v.replace(/\s+/gi, '')).indexOf(dnum)
+                if(pdata[dnum] == '' || pdata[dnum] == undefined) return false;
+                if(o[0]=='=='){
+                    if(pdata[dnum].replace(/\s+/g, '') == param) bools.push(true)
+                    else bools.push(false)
+                    continue
+                }else if(o[0]=='>'){
+                    if(pdata[dnum].replace(/\s+/g, '') >  param) bools.push(true)
+                    else bools.push(false)
+                    continue
+                }else if(o[0]=='<'){
+                    if(pdata[dnum].replace(/\s+/g, '') < param) bools.push(true)
+                    else bools.push(false)
+                    continue
+                }else if(o[0]=='>='){
+                    if(pdata[dnum].replace(/\s+/g, '') >= param) bools.push(true)
+                    else bools.push(false)
+                    continue
+                }else if(o[0]=='<='){
+                    if(pdata[dnum].replace(/\s+/g, '') <= param) bools.push(true)
+                    else bools.push(false)
+                    continue
+                }else if(o[0]=='!='){
+                    if(pdata[dnum].replace(/\s+/g, '') != param) bools.push(true)
+                    else bools.push(false)
+                    continue                                
+                }
+            }
+        }else{
+            dnum = periodInformationArray.map(v=>v.replace(/\s+/gi, '')).indexOf(dnum)
+            if(pdata['p'+(period)][dnum] == '' || pdata['p'+(period)][dnum] == undefined) return false;
+            if(o[0]=='=='){
+                if(isNaN(pdata['p'+String(period)][dnum])){
+                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') == param) bools.push(true)
+                    else bools.push(false)
+                }else{
+                    if(pdata['p'+String(period)][dnum] == param) bools.push(true)
+                    else bools.push(false)
+                }
+                continue
+            }else if(o[0]=='>'){
+                if(isNaN(pdata['p'+String(period)][dnum])){
+                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') >  param) bools.push(true)
+                    else bools.push(false)
+                }else{
+                    if(pdata['p'+String(period)][dnum] >  param) bools.push(true)
+                    else bools.push(false)
+                }
+                continue
+            }else if(o[0]=='<'){
+                if(isNaN(pdata['p'+String(period)][dnum])){
+                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') < param) bools.push(true)
+                    else bools.push(false)
+                }else{
+                    if(pdata['p'+String(period)][dnum] < param) bools.push(true)
+                    else bools.push(false)
+                }
+                continue
+            }else if(o[0]=='>='){
+                if(isNaN(pdata['p'+String(period)][dnum])){
+                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') >= param) bools.push(true)
+                    else bools.push(false)
+                }else{
+                    if(pdata['p'+String(period)][dnum] >= param) bools.push(true)
+                    else bools.push(false)
+                }
+                continue
+            }else if(o[0]=='<='){
+                if(isNaN(pdata['p'+String(period)][dnum])){
+                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') <= param) bools.push(true)
+                    else bools.push(false)
+                }else{
+                    if(pdata['p'+String(period)][dnum] <= param) bools.push(true)
+                    else bools.push(false)
+                }
+                continue
+            }else if(o[0]=='!='){
+                if(isNaN(pdata['p'+String(period)][dnum])){
+                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') != param) bools.push(true)
+                    else bools.push(false)
+                }else{
+                    if(pdata['p'+String(period)][dnum] != param) bools.push(true)
+                    else bools.push(false)
+                }
+                continue                                
+            }
+        }
+    }
+    while(bools.length>=1){
+        if(bools.length==1){
+            return bools[0];
+        }
+        for(var and of ands){
+            var index = ands.indexOf(and)
+            and = ands.splice(index, 1)[0]
+            if(and=='and'){
+                if(bools[index] && bools[index+1]) bools.splice(index+1, 1)
+                else bools.splice(index, 2, false)
+            }else if(ands.indexOf('and') == -1 && and=='or'){
+                if(bools[index] || bools[index+1]) bools.splice(index+1, 1)
+                else bools.splice(index, 2, false)
+            }
+        }
+    }
 }
