@@ -240,6 +240,7 @@
                 })
                 var d = vdata.filter(v=>v.name==e.getElementsByTagName('h5')[0].textContent)[0]
                 if(!e.getElementsByTagName('input')[0].hasAttribute('checked')){//check
+                    this.typeofd = d                
                     if(s.length>8) return
                     e.style.backgroundColor = '#0f07'
                     e.getElementsByTagName('input')[0].toggleAttribute('checked');
@@ -282,6 +283,7 @@
             var e = (paramData) => {
                 pIndex = data.names.indexOf(paramData.name)
                 keys = Object.keys(paramData).filter(v=>v.split('p').length==2);
+                this.typeofd = paramData               
                 for(var i of keys){
                     var circleIndex = i.split('p')[1];
                     for(var k in paramData[i]){

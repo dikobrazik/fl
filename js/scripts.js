@@ -67,11 +67,10 @@ function list(f){
 	});
 }
 function add(data){
-    console.log(data)
     connectDB( function(db){
     var request = db.transaction([storeName], "readwrite").objectStore(storeName).put(data);
 		request.onsuccess = function(e){
-            console.log('added')
+            // console.log('added')
 			id = request.result;
 		}
 	});
@@ -189,103 +188,47 @@ var isTrue = (cond)=>{
     var ands = cond.match(/and(?=\[)|or(?=\[)/g) || [cond]
     var condArray = cond.split(/and(?=\[)|or(?=\[)/g)
     var bools = [];
+
     while(condArray.length>0){
+        var compare = (statement, ...operand)=>{
+            if(isNaN(operand[0])) operand[0] = '"' + operand[0].replace(/\s+/g, '') + '"'
+            if(isNaN(operand[1])) operand[1] = '"' + operand[1].replace(/\s+/g, '') + '"'
+            cond = operand[0] + statement + operand[1]
+            return eval(cond)
+        }
+        if(condArray[0] == '') {
+            condArray.pop();
+            continue
+        }
         o = condArray.pop().match(/==|>=|<=|>|<|!=/);
         ad = o.input.substr(0,o.index)
         dnum = ad.split('][')[1].substr(0,ad.split('][')[1].indexOf(']'))
         period = ad.split('][')[0].substr(1);//название периода
         period = ['Общий','24часа', '24-48часов', '3сутки','4-7сутки','12-15сутки','16-30сутки','Выписка'].indexOf(period);
-        param = o.input.substr(o.index+2).replace(/"/g,'');
+        param = o[0].length>=2?o.input.substr(o.index+2).replace(/"/g,''):o.input.substr(o.index+1).replace(/"/g,'');
+        if(ad.split('][').length > 2) {
+            typeOfDiagnostic = this.typeofd
+            if(typeOfDiagnostic == undefined) continue
+            typeOfDiagnostic = typeOfDiagnostic['p'+period].filter(v=>v.name == ad.split('][')[1])[0]
+            if(typeOfDiagnostic == undefined) continue
+            res = getCondition(typeOfDiagnostic[ad.split('][')[2].substr(0,ad.split('][')[2].indexOf(']'))]);
+            if(['==','>','<','>=','<=','!='].indexOf(o[0])==-1)continue
+            if(compare(o[0], res.replace(/\s+/g, ''), param)) bools.push(true)
+            else bools.push(false)
+            continue
+        }
         if(period==0){
-            if(ad.split('][').length > 2) {
-                console.log(ad)
-            }else{
-                dnum = generalInformationArray.map(v=>v.replace(/\s+/gi, '')).indexOf(dnum)
-                if(pdata[dnum] == '' || pdata[dnum] == undefined) return false;
-                if(o[0]=='=='){
-                    if(pdata[dnum].replace(/\s+/g, '') == param) bools.push(true)
-                    else bools.push(false)
-                    continue
-                }else if(o[0]=='>'){
-                    if(pdata[dnum].replace(/\s+/g, '') >  param) bools.push(true)
-                    else bools.push(false)
-                    continue
-                }else if(o[0]=='<'){
-                    if(pdata[dnum].replace(/\s+/g, '') < param) bools.push(true)
-                    else bools.push(false)
-                    continue
-                }else if(o[0]=='>='){
-                    if(pdata[dnum].replace(/\s+/g, '') >= param) bools.push(true)
-                    else bools.push(false)
-                    continue
-                }else if(o[0]=='<='){
-                    if(pdata[dnum].replace(/\s+/g, '') <= param) bools.push(true)
-                    else bools.push(false)
-                    continue
-                }else if(o[0]=='!='){
-                    if(pdata[dnum].replace(/\s+/g, '') != param) bools.push(true)
-                    else bools.push(false)
-                    continue                                
-                }
-            }
+            dnum = generalInformationArray.map(v=>v.replace(/\s+/gi, '')).indexOf(dnum)
+            if(pdata[dnum] == '' || pdata[dnum] == undefined) return false;
+            if(compare(o[0], pdata[dnum], param)) bools.push(true)
+            else bools.push(false)
+            continue
         }else{
             dnum = periodInformationArray.map(v=>v.replace(/\s+/gi, '')).indexOf(dnum)
             if(pdata['p'+(period)][dnum] == '' || pdata['p'+(period)][dnum] == undefined) return false;
-            if(o[0]=='=='){
-                if(isNaN(pdata['p'+String(period)][dnum])){
-                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') == param) bools.push(true)
-                    else bools.push(false)
-                }else{
-                    if(pdata['p'+String(period)][dnum] == param) bools.push(true)
-                    else bools.push(false)
-                }
-                continue
-            }else if(o[0]=='>'){
-                if(isNaN(pdata['p'+String(period)][dnum])){
-                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') >  param) bools.push(true)
-                    else bools.push(false)
-                }else{
-                    if(pdata['p'+String(period)][dnum] >  param) bools.push(true)
-                    else bools.push(false)
-                }
-                continue
-            }else if(o[0]=='<'){
-                if(isNaN(pdata['p'+String(period)][dnum])){
-                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') < param) bools.push(true)
-                    else bools.push(false)
-                }else{
-                    if(pdata['p'+String(period)][dnum] < param) bools.push(true)
-                    else bools.push(false)
-                }
-                continue
-            }else if(o[0]=='>='){
-                if(isNaN(pdata['p'+String(period)][dnum])){
-                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') >= param) bools.push(true)
-                    else bools.push(false)
-                }else{
-                    if(pdata['p'+String(period)][dnum] >= param) bools.push(true)
-                    else bools.push(false)
-                }
-                continue
-            }else if(o[0]=='<='){
-                if(isNaN(pdata['p'+String(period)][dnum])){
-                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') <= param) bools.push(true)
-                    else bools.push(false)
-                }else{
-                    if(pdata['p'+String(period)][dnum] <= param) bools.push(true)
-                    else bools.push(false)
-                }
-                continue
-            }else if(o[0]=='!='){
-                if(isNaN(pdata['p'+String(period)][dnum])){
-                    if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') != param) bools.push(true)
-                    else bools.push(false)
-                }else{
-                    if(pdata['p'+String(period)][dnum] != param) bools.push(true)
-                    else bools.push(false)
-                }
-                continue                                
-            }
+            if(compare(o[0], pdata['p'+period][dnum], param)) bools.push(true)
+            else bools.push(false)
+            continue
         }
     }
     while(bools.length>=1){
@@ -305,3 +248,120 @@ var isTrue = (cond)=>{
         }
     }
 }
+
+// while(condArray.length>0){
+//     if(condArray[0] == '') {
+//         condArray.pop();
+//         continue
+//     }
+//     o = condArray.pop().match(/==|>=|<=|>|<|!=/);
+//     ad = o.input.substr(0,o.index)
+//     dnum = ad.split('][')[1].substr(0,ad.split('][')[1].indexOf(']'))
+//     period = ad.split('][')[0].substr(1);//название периода
+//     period = ['Общий','24часа', '24-48часов', '3сутки','4-7сутки','12-15сутки','16-30сутки','Выписка'].indexOf(period);
+//     param = o.input.substr(o.index+2).replace(/"/g,'');
+//     if(period==0){
+//         if(ad.split('][').length > 2) {
+//             typeOfDiagnostic = this.typeofd
+//             if(typeOfDiagnostic == undefined) continue
+//             typeOfDiagnostic = typeOfDiagnostic['p'+period].filter(v=>v.name == ad.split('][')[1])[0]
+//             if(typeOfDiagnostic == undefined) continue
+//             res = getCondition(typeOfDiagnostic[ad.split('][')[2].substr(0,ad.split('][')[2].indexOf(']'))]);
+//             var compare = (statement, ...operand)=>{
+//                 if(isNaN(operand[0])) operand[0] = '"' + operand[0] + '"'
+//                 if(isNaN(operand[1])) operand[1] = '"' + operand[1] + '"'
+//                 cond = operand[0] + statement + operand[1]
+//                 return eval(cond)
+//             }
+//             if(['==','>','<','>=','<=','!='].indexOf(o[0])==-1)continue
+//             if(compare(o[0], res.replace(/\s+/g, ''), param)) bools.push(true)
+//             else bools.push(false)
+//         }else{
+//             dnum = generalInformationArray.map(v=>v.replace(/\s+/gi, '')).indexOf(dnum)
+//             if(pdata[dnum] == '' || pdata[dnum] == undefined) return false;
+//             if(o[0]=='=='){
+//                 if(pdata[dnum].replace(/\s+/g, '') == param) bools.push(true)
+//                 else bools.push(false)
+//                 continue
+//             }else if(o[0]=='>'){
+//                 if(pdata[dnum].replace(/\s+/g, '') >  param) bools.push(true)
+//                 else bools.push(false)
+//                 continue
+//             }else if(o[0]=='<'){
+//                 if(pdata[dnum].replace(/\s+/g, '') < param) bools.push(true)
+//                 else bools.push(false)
+//                 continue
+//             }else if(o[0]=='>='){
+//                 if(pdata[dnum].replace(/\s+/g, '') >= param) bools.push(true)
+//                 else bools.push(false)
+//                 continue
+//             }else if(o[0]=='<='){
+//                 if(pdata[dnum].replace(/\s+/g, '') <= param) bools.push(true)
+//                 else bools.push(false)
+//                 continue
+//             }else if(o[0]=='!='){
+//                 if(pdata[dnum].replace(/\s+/g, '') != param) bools.push(true)
+//                 else bools.push(false)
+//                 continue                                
+//             }
+//         }
+//     }else{
+//         dnum = periodInformationArray.map(v=>v.replace(/\s+/gi, '')).indexOf(dnum)
+//         if(pdata['p'+(period)][dnum] == '' || pdata['p'+(period)][dnum] == undefined) return false;
+//         if(o[0]=='=='){
+//             if(isNaN(pdata['p'+String(period)][dnum])){
+//                 if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') == param) bools.push(true)
+//                 else bools.push(false)
+//             }else{
+//                 if(pdata['p'+String(period)][dnum] == param) bools.push(true)
+//                 else bools.push(false)
+//             }
+//             continue
+//         }else if(o[0]=='>'){
+//             if(isNaN(pdata['p'+String(period)][dnum])){
+//                 if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') >  param) bools.push(true)
+//                 else bools.push(false)
+//             }else{
+//                 if(pdata['p'+String(period)][dnum] >  param) bools.push(true)
+//                 else bools.push(false)
+//             }
+//             continue
+//         }else if(o[0]=='<'){
+//             if(isNaN(pdata['p'+String(period)][dnum])){
+//                 if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') < param) bools.push(true)
+//                 else bools.push(false)
+//             }else{
+//                 if(pdata['p'+String(period)][dnum] < param) bools.push(true)
+//                 else bools.push(false)
+//             }
+//             continue
+//         }else if(o[0]=='>='){
+//             if(isNaN(pdata['p'+String(period)][dnum])){
+//                 if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') >= param) bools.push(true)
+//                 else bools.push(false)
+//             }else{
+//                 if(pdata['p'+String(period)][dnum] >= param) bools.push(true)
+//                 else bools.push(false)
+//             }
+//             continue
+//         }else if(o[0]=='<='){
+//             if(isNaN(pdata['p'+String(period)][dnum])){
+//                 if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') <= param) bools.push(true)
+//                 else bools.push(false)
+//             }else{
+//                 if(pdata['p'+String(period)][dnum] <= param) bools.push(true)
+//                 else bools.push(false)
+//             }
+//             continue
+//         }else if(o[0]=='!='){
+//             if(isNaN(pdata['p'+String(period)][dnum])){
+//                 if(pdata['p'+String(period)][dnum].replace(/\s+/g, '') != param) bools.push(true)
+//                 else bools.push(false)
+//             }else{
+//                 if(pdata['p'+String(period)][dnum] != param) bools.push(true)
+//                 else bools.push(false)
+//             }
+//             continue                                
+//         }
+//     }
+// }
