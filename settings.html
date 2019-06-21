@@ -45,6 +45,10 @@
     </table>
     <a id="add" class="btn btn-success text-white col">Добавить</a>
   </div>
+  <div class="row justify-content-end mt-2 mx-3">
+    <a id="import" class='col-2 btn btn-primary text-white mr-2'>Import</a>
+    <a id="export" target="_blank" download="1.json" class='col-2 btn btn-info text-white'>Export</a>
+  </div>
   <a id="test" class=' btn btn-white text-white m-0 p-0 '>d</a>
   <script>
     document.querySelector('div.col').style.opacity = 0;
@@ -74,12 +78,13 @@
       window.open(window.location.href.split('/settings')[0]+'/settings_data.html?id=' +data[type].id+'&p='+e.parentElement.cellIndex+'&row='+e.parentElement.parentElement.rowIndex, '_self')
     }
     document.addEventListener('DOMContentLoaded', (e)=>{
-      document.getElementsByClassName('header')[0].innerHTML = periods.map(val => `<th scope="col" style="text-align: center; width:135px">${val}</th>`).join('')
-      toggleStore();
-      list(a)
-      toggleStore();
+        document.getElementsByClassName('header')[0].innerHTML = periods.map(val => `<th scope="col" style="text-align: center; width:135px">${val}</th>`).join('')
+        toggleStore();
+        list(a)
+        toggleStore();
     })
     var a = (e)=>{
+        downloadFile(JSON.stringify(e), '1.json', document.getElementById('export'))
         data = e;
         for(var i = 0; i<e.length; i++){
             var block = document.createElement('div')
@@ -179,6 +184,37 @@
         return width;
     }
     var tablePattern = `<tbody class='table-body'> </tbody>`;
+    var importJSON = function(){
+        loadIndicator();
+        var r = function(min, max){
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "1.json");
+        xhr.onload = async (e)=>{
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                iData = JSON.parse(xhr.responseText);
+                toggleStore();
+                connectDB( function(db){
+                    i=0;
+                    var transaction = db.transaction(storeName, "readwrite");
+                    var itemStore = transaction.objectStore(storeName);
+                    putNext();
+
+                    function putNext() {
+                        if (i<iData.length) {
+                            itemStore.put(iData[i]).onsuccess = putNext;
+                            ++i;
+                        } else {
+                            document.location.reload()
+                        }
+                    }  
+                });
+                toggleStore();
+            } 
+        };
+        xhr.send(null);
+    }
   </script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
