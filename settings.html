@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title></title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  
   <script>
       var periodTitle = '';
     </script>
@@ -46,7 +47,7 @@
     <a id="add" class="btn btn-success text-white col">Добавить</a>
   </div>
   <div class="row justify-content-end mt-2 mx-3">
-    <a id="import" class='col-2 btn btn-primary text-white mr-2'>Import</a>
+    <a onclick="importJSON()" class='col-2 btn btn-primary text-white mr-2'>Import</a>
     <a id="export" target="_blank" download="1.json" class='col-2 btn btn-info text-white'>Export</a>
   </div>
   <a id="test" class=' btn btn-white text-white m-0 p-0 '>d</a>
@@ -190,23 +191,24 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "1.json");
+        xhr.open("GET", "2.json");
         xhr.onload = async (e)=>{
             if (xhr.readyState == 4 && xhr.status == 200) {
                 iData = JSON.parse(xhr.responseText);
                 toggleStore();
                 connectDB( function(db){
                     i=0;
-                    var transaction = db.transaction(storeName, "readwrite");
-                    var itemStore = transaction.objectStore(storeName);
+                    var transaction = db.transaction([storeName], "readwrite");
+                    var itemStore = transaction.objectStore([storeName]);
                     putNext();
 
                     function putNext() {
                         if (i<iData.length) {
+                            delete iData[i].id
                             itemStore.put(iData[i]).onsuccess = putNext;
                             ++i;
                         } else {
-                            document.location.reload()
+                            // document.location.reload()
                         }
                     }  
                 });
