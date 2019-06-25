@@ -198,6 +198,7 @@
                 toggleStore();
                 connectDB( function(db){
                     i=0;
+                    db.transaction([storeName], "readwrite").objectStore([storeName]).clear();
                     var transaction = db.transaction([storeName], "readwrite");
                     var itemStore = transaction.objectStore([storeName]);
                     putNext();
@@ -208,7 +209,7 @@
                             itemStore.put(iData[i]).onsuccess = putNext;
                             ++i;
                         } else {
-                            // document.location.reload()
+                            document.location.reload()
                         }
                     }  
                 });
